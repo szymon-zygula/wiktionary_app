@@ -1,3 +1,5 @@
+import 'wiktionary_api.dart' as wiktionary_api;
+
 import 'package:html/parser.dart' as htmlparser;
 import 'package:html/dom.dart' as dom;
 
@@ -38,19 +40,52 @@ void removeExternalLinks(dom.Document document) {
   document.getElementsByClassName("extiw").forEach((el) => convertTag(document, el, 'span'));
 }
 
+void extractOnlyChild(dom.Element element) {
+  element.replaceWith(element.firstChild!);
+}
+
+void removeLazyLoadedImages(dom.Document document) {
+  document.getElementsByClassName("lazy-image-placeholder").forEach(removeSelf);
+}
+
+void removeLinksFromImages(dom.Document document) {
+  document.getElementsByClassName("image").forEach(extractOnlyChild);
+}
+
 void makeImageLinkAbsolute(dom.Element element) {
-  element.attributes["src"]!.substring(2);
+  element.attributes["src"] = wiktionary_api.protocol + ":" + element.attributes["src"]!;
 }
 
 void makeImageLinksAbsolute(dom.Document document) {
   document.getElementsByTagName("img").forEach(makeImageLinkAbsolute);
 }
 
+void extractNoscript(dom.Document document, dom.Element element) {
+  String inner = element.innerHtml;
+  String innerParsed = inner.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
+
+  dom.Element replacement = document.createElement("DIV");
+  replacement.innerHtml = innerParsed;
+
+  element.replaceWith(replacement);
+}
+
+void extractNoscripts(dom.Document document) {
+  document.getElementsByTagName("noscript").forEach((el) => extractNoscript(document, el));
+}
+
 void cleanDocument(dom.Document document) {
   removeAudioTags(document);
+
   removeEditSections(document);
   removePageActionsMenu(document);
+
   removeScripts(document);
+  extractNoscripts(document);
+
   removeExternalLinks(document);
+
+  removeLazyLoadedImages(document);
   makeImageLinksAbsolute(document);
+  removeLinksFromImages(document);
 }

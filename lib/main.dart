@@ -4,15 +4,17 @@ import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as htmlparser;
 import 'package:html/dom.dart' as dom;
 import 'wiktionary_parser.dart' as wiktionary_parser;
+import 'wiktionary_api.dart' as wiktionary_api;
 
-void main() {
+void main() async {
+  print("Getting langs...");
+  print(await wiktionary_api.getArticleLanguages(8451684));
   print("Getting html...");
-  http.get(Uri.parse("https://en.m.wiktionary.org/wiki/manger"))
-    .then((html) => http.get(Uri.parse("https://en.m.wiktionary.org/w/load.php?lang=en&modules=ext.wikimediaBadges%7Cmediawiki.hlist%7Cmediawiki.ui.button%2Cicon%7Cmobile.init.styles%7Cskins.minerva.base.styles%7Cskins.minerva.content.styles.images%7Cskins.minerva.icons.wikimedia%7Cskins.minerva.mainMenu.icons%2Cstyles&only=styles&skin=minerva"))
-      .then((css) =>
-        runApp(MyApp(html.body.toString(), css.body.toString()))
-      )
-  );
+  http.Response html = await http.get(Uri.parse("https://en.m.wiktionary.org/wiki/manger"));
+  print("Getting css...");
+  http.Response css = await http.get(Uri.parse("https://en.m.wiktionary.org/w/load.php?lang=en&modules=ext.wikimediaBadges%7Cmediawiki.hlist%7Cmediawiki.ui.button%2Cicon%7Cmobile.init.styles%7Cskins.minerva.base.styles%7Cskins.minerva.content.styles.images%7Cskins.minerva.icons.wikimedia%7Cskins.minerva.mainMenu.icons%2Cstyles&only=styles&skin=minerva"));
+  print("Starting...");
+  runApp(MyApp(html.body.toString(), css.body.toString()));
 }
 
 class MyApp extends StatelessWidget {

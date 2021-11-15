@@ -74,6 +74,10 @@ void extractNoscripts(dom.Document document) {
   document.getElementsByTagName("noscript").forEach((el) => extractNoscript(document, el));
 }
 
+void removeWordOfTheDayInfo(dom.Document document) {
+  document.getElementsByClassName("was-wotd").forEach(removeSelf);
+}
+
 void cleanDocument(dom.Document document) {
   removeAudioTags(document);
 
@@ -88,4 +92,6 @@ void cleanDocument(dom.Document document) {
   removeLazyLoadedImages(document);
   makeImageLinksAbsolute(document);
   removeLinksFromImages(document);
+
+  removeWordOfTheDayInfo(document);
 }

@@ -13,6 +13,11 @@ void attachCss(dom.Document document, String css) {
   document.head!.append(style);
 }
 
+void extractContent(dom.Document document) {
+  String articleText = document.getElementsByClassName("mw-parser-output").first.innerHtml;
+  document.documentElement!.innerHtml = articleText;
+}
+
 void removeAudioTags(dom.Document document) {
   document.getElementsByTagName("audio").forEach(removeSelf);
 }
@@ -78,7 +83,13 @@ void removeWordOfTheDayInfo(dom.Document document) {
   document.getElementsByClassName("was-wotd").forEach(removeSelf);
 }
 
+void removeNavigation(dom.Document document) {
+  document.getElementsByClassName("toc").forEach(removeSelf);
+}
+
 void cleanDocument(dom.Document document) {
+  extractContent(document);
+
   removeAudioTags(document);
 
   removeEditSections(document);
@@ -94,4 +105,6 @@ void cleanDocument(dom.Document document) {
   removeLinksFromImages(document);
 
   removeWordOfTheDayInfo(document);
+
+  removeNavigation(document);
 }

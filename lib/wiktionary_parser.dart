@@ -87,9 +87,38 @@ void removeNavigation(dom.Document document) {
   document.getElementsByClassName("toc").forEach(removeSelf);
 }
 
-void replaceNavContent(dom.Document document) {
-  document.getElementsByClassName("NavContent")
-    .forEach((el) => el.attributes['style'] = 'border: 2px solid black; padding: 5px;');
+void fixInlineBackgroundColor(dom.Document document) {
+  String inner = document.documentElement!.innerHtml;
+  String fixedInner = inner.replaceAll("background:", "background-color:");
+  document.documentElement!.innerHtml = fixedInner;
+}
+
+void appendStyle(dom.Element element, String style) {
+  String newStyle;
+  if(element.attributes['style'] == null) {
+    newStyle = "";
+  }
+  else {
+    newStyle = element.attributes['style']! + ";";
+  }
+
+  element.attributes['style'] = newStyle + style + ";";
+}
+
+void centerTableHeaders(dom.Document document) {
+  document.getElementsByTagName("th")
+    .forEach((el) => appendStyle(el, "text-align:center"));
+}
+
+void styleTables(dom.Document document) {
+  document.getElementsByTagName("table")
+    .forEach((el) => appendStyle(el, "border: 1px solid black"));
+  document.getElementsByTagName("th")
+    .forEach((el) => appendStyle(el, "border: 1px solid black"));
+  document.getElementsByTagName("td")
+    .forEach((el) => appendStyle(el, "border: 1px solid black"));
+  document.getElementsByTagName("tr")
+    .forEach((el) => appendStyle(el, "border: 1px solid black"));
 }
 
 void cleanDocument(dom.Document document) {
@@ -112,5 +141,8 @@ void cleanDocument(dom.Document document) {
   removeWordOfTheDayInfo(document);
 
   removeNavigation(document);
-  replaceNavContent(document);
+
+  fixInlineBackgroundColor(document);
+  centerTableHeaders(document);
+  styleTables(document);
 }

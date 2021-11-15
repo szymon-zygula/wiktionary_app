@@ -68,6 +68,14 @@ class _MyHomePageState extends State<MyHomePage> {
           data: document.outerHtml,
           onLinkTap: (url, _, __, ___) {
             print("Tapped on $url...");
+          },
+          customRender: {
+            "table": (RenderContext context, Widget child) {
+              return SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: (context.tree as TableLayoutElement).toWidget(context),
+              );
+            }
           }
         ),
       ),

@@ -87,6 +87,11 @@ void removeNavigation(dom.Document document) {
   document.getElementsByClassName("toc").forEach(removeSelf);
 }
 
+void replaceNavContent(dom.Document document) {
+  document.getElementsByClassName("NavContent")
+    .forEach((el) => el.attributes['style'] = 'border: 2px solid black; padding: 5px;');
+}
+
 void cleanDocument(dom.Document document) {
   extractContent(document);
 
@@ -107,4 +112,5 @@ void cleanDocument(dom.Document document) {
   removeWordOfTheDayInfo(document);
 
   removeNavigation(document);
+  replaceNavContent(document);
 }

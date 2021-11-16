@@ -7,6 +7,10 @@ void removeSelf(dom.Element element) {
   element.remove();
 }
 
+void removeParent(dom.Element element) {
+  element.parent!.remove();
+}
+
 void attachCss(dom.Document document, String css) {
   dom.Element style = document.createElement("style");
   style.innerHtml = css;
@@ -18,8 +22,8 @@ void extractContent(dom.Document document) {
   document.documentElement!.innerHtml = articleText;
 }
 
-void removeAudioTags(dom.Document document) {
-  document.getElementsByTagName("audio").forEach(removeSelf);
+void removeAudio(dom.Document document) {
+  document.getElementsByClassName("audiotable").forEach(removeParent);
 }
 
 void removeEditSections(dom.Document document) {
@@ -45,6 +49,10 @@ void removeExternalLinks(dom.Document document) {
   document.getElementsByClassName("extiw").forEach((el) => convertTag(document, el, 'span'));
 }
 
+void removeAudiometa(dom.Document document) {
+  document.getElementsByClassName("audiometa").forEach(removeSelf);
+}
+
 void extractOnlyChild(dom.Element element) {
   element.replaceWith(element.firstChild!);
 }
@@ -57,12 +65,13 @@ void removeLinksFromImages(dom.Document document) {
   document.getElementsByClassName("image").forEach(extractOnlyChild);
 }
 
-void makeImageLinkAbsolute(dom.Element element) {
+void makeResourceLinkAbsolute(dom.Element element) {
   element.attributes["src"] = wiktionary_api.protocol + ":" + element.attributes["src"]!;
 }
 
-void makeImageLinksAbsolute(dom.Document document) {
-  document.getElementsByTagName("img").forEach(makeImageLinkAbsolute);
+void makeResourceLinksAbsolute(dom.Document document) {
+  document.getElementsByTagName("img").forEach(makeResourceLinkAbsolute);
+  document.getElementsByTagName("source").forEach(makeResourceLinkAbsolute);
 }
 
 void extractNoscript(dom.Document document, dom.Element element) {
@@ -124,7 +133,7 @@ void styleTables(dom.Document document) {
 void cleanDocument(dom.Document document) {
   extractContent(document);
 
-  removeAudioTags(document);
+  removeAudio(document);
 
   removeEditSections(document);
   removePageActionsMenu(document);
@@ -133,9 +142,10 @@ void cleanDocument(dom.Document document) {
   extractNoscripts(document);
 
   removeExternalLinks(document);
+  removeAudiometa(document);
 
   removeLazyLoadedImages(document);
-  makeImageLinksAbsolute(document);
+  makeResourceLinksAbsolute(document);
   removeLinksFromImages(document);
 
   removeWordOfTheDayInfo(document);

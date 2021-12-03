@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'debug.dart';
 
 class GenericEntryList extends StatelessWidget {
   final List<String> entries;
@@ -27,9 +28,7 @@ class GenericEntry extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        var snackBar = SnackBar(content: Text(entry));
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        Feedback.forTap(context);
+        showSnackBar(context, entry);
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),

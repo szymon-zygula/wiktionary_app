@@ -8,7 +8,10 @@ class MainScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         WiktionaryHeader(),
-        SearchBar()
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: SearchBar(),
+        )
       ]
     );
   }
@@ -18,7 +21,7 @@ class WiktionaryHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(left: 20, top: 10),
+      padding: const EdgeInsets.only(left: 25, top: 15, bottom: 5),
       child: const Text(
         'Wiktionary',
         style: TextStyle(

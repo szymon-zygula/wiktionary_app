@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'search_bar.dart';
 import 'generic_entry_list.dart';
-import 'custom_back_button.dart';
+import 'custom_buttons.dart';
 
 final List<String> dummyLanguages = <String>[
   'polski', 'italiano', 'français', 'deutsch', 'English',

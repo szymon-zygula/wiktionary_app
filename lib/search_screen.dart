@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'search_bar.dart';
 import 'generic_entry_list.dart';
-import 'custom_back_button.dart';
+import 'custom_buttons.dart';
+import 'debug.dart';
 
 final List<String> dummySearches = <String>[
   'szołdra', 'snycerz', 'acquiesce', 'herfallen',
-  'szołdra', 'snycerz', 'acquiesce', 'herfallen',
+  'głowica', 'penna', 'esquiver', 'srbski',
   'szołdra', 'snycerz', 'acquiesce', 'herfallen',
   'szołdra', 'snycerz', 'acquiesce', 'herfallen',
   'szołdra', 'snycerz', 'acquiesce', 'herfallen',
@@ -52,15 +53,25 @@ class SearchBarWithBackButton extends StatelessWidget {
 class HistoryHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.only(left: 20, top: 10, bottom: 20),
-      child: const Text(
-        'Recent searches:',
-        style: TextStyle(
-          fontSize: 25,
-          fontWeight: FontWeight.bold
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.only(left: 20, top: 10, bottom: 20),
+            child: const Text(
+              'Recent searches:',
+              style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold
+              )
+            )
+          )  
+        ),
+        Container(
+          padding: EdgeInsets.only(right: 20, bottom: 10),
+          child: CustomButton(Icons.delete, () { showSnackBar(context, 'Supprimer l\'histoire'); }, size: 32.0)
         )
-      )
+      ]
     );
   }
 }

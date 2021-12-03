@@ -7,9 +7,9 @@ class SearchBar extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 30),
-        decoration: const BoxDecoration(
-          color: Color.fromRGBO(224, 224, 224, 1.0),
-          borderRadius: BorderRadius.all(Radius.circular(200))
+        decoration: BoxDecoration(
+          color: const Color.fromRGBO(224, 224, 224, 1.0),
+          borderRadius: BorderRadius.circular(1000.0)
         ),
         child: const TextField(
           maxLines: 1,

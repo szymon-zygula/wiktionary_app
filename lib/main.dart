@@ -6,6 +6,7 @@ import 'package:html/dom.dart' as dom;
 import 'wiktionary_parser.dart' as wiktionary_parser;
 import 'wiktionary_api.dart' as wiktionary_api;
 import 'main_screen.dart';
+import 'search_screen.dart';
 
 void main() async {
   print("Getting html...");
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
       ),
       home: Scaffold(
         body: SafeArea(
-          child: MainScreen()
+          child: SearchScreen()
         ) /*MyHomePage(htmlData, cssData, title: 'Wiktionary')*/
       )
     );

@@ -1,14 +1,22 @@
+import 'wiktionary_parser.dart' as wiktionary_parser;
+
 import 'package:http/http.dart' as http;
+import 'package:html/dom.dart' as dom;
+import 'package:html/parser.dart' as htmlparser;
 import 'dart:convert';
 
 const protocol = "https";
-const apiDomain = "wiktionary.org";
+const wiktionaryDomain = "wiktionary.org";
 const apiPath = "/w/api.php";
 const apiOmnipresentParams = "format=json";
 const apiGetLanguagesParams = "action=parse&prop=langlinks";
 
 String getApiUrl(String langCode) {
-  return "$protocol://$langCode.$apiDomain/$apiPath?$apiOmnipresentParams";
+  return "$protocol://$langCode.$wiktionaryDomain/$apiPath?$apiOmnipresentParams";
+}
+
+String getSiteUrl(String langCode) {
+  return "$protocol://$langCode.$wiktionaryDomain/wiki/";
 }
 
 class LanguageDefinition {
@@ -27,8 +35,8 @@ class LanguageDefinition {
   }
 }
 
-Future<List<LanguageDefinition>> getArticleLanguages(int pageid) async {
-  String url = "${getApiUrl("en")}&$apiGetLanguagesParams&pageid=$pageid";
+Future<List<LanguageDefinition>> getArticleLanguages(String lang, int pageid) async {
+  String url = "${getApiUrl(lang)}&$apiGetLanguagesParams&pageid=$pageid";
   http.Response res = await http.get(Uri.parse(url));
   Map<String, dynamic> jsonRes = jsonDecode(res.body.toString());
   List<dynamic> unparsedLangs = jsonRes["parse"]["langlinks"];
@@ -40,3 +48,26 @@ Future<List<LanguageDefinition>> getArticleLanguages(int pageid) async {
 
   return langs;
 }
+
+Future<dom.Document> getArticle(String lang, String name) async {
+  String url = "${getSiteUrl(lang)}$name";
+  http.Response res = await http.get(Uri.parse(url));
+  String body = res.body.toString();
+  dom.Document document = htmlparser.parse(body);
+  wiktionary_parser.cleanDocument(document);
+  return document;
+}
+
+//TODO: https://en.wiktionary.org/w/api.php?action=opensearch&search=uberweisen
+// Future<> search...
+
+
+
+
+
+
+
+
+
+
+

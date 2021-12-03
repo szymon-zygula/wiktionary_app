@@ -7,14 +7,12 @@ import 'wiktionary_parser.dart' as wiktionary_parser;
 import 'wiktionary_api.dart' as wiktionary_api;
 
 void main() async {
-  print("Getting langs...");
-  print(await wiktionary_api.getArticleLanguages(8451684));
   print("Getting html...");
-  http.Response html = await http.get(Uri.parse("https://en.m.wiktionary.org/wiki/manger"));
+  dom.Document html = await wiktionary_api.getArticle("en", "manger");
   print("Getting css...");
   http.Response css = await http.get(Uri.parse("https://en.m.wiktionary.org/w/load.php?lang=en&modules=ext.wikimediaBadges%7Cmediawiki.hlist%7Cmediawiki.ui.button%2Cicon%7Cmobile.init.styles%7Cskins.minerva.base.styles%7Cskins.minerva.content.styles.images%7Cskins.minerva.icons.wikimedia%7Cskins.minerva.mainMenu.icons%2Cstyles&only=styles&skin=minerva"));
   print("Starting...");
-  runApp(MyApp(html.body.toString(), css.body.toString()));
+  runApp(MyApp(html.documentElement!.innerHtml, css.body.toString()));
 }
 
 class MyApp extends StatelessWidget {
@@ -54,10 +52,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    dom.Document document = htmlparser.parse(htmlData);
-    wiktionary_parser.cleanDocument(document);
-    wiktionary_parser.attachCss(document, cssData);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('flutter_html Example'),
@@ -65,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: SingleChildScrollView(
         child: Html(
-          data: document.outerHtml,
+          data: htmlData,
           onLinkTap: (url, _, __, ___) {
             print("Tapped on $url...");
           },

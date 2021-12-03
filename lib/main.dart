@@ -5,6 +5,7 @@ import 'package:html/parser.dart' as htmlparser;
 import 'package:html/dom.dart' as dom;
 import 'wiktionary_parser.dart' as wiktionary_parser;
 import 'wiktionary_api.dart' as wiktionary_api;
+import 'main_screen.dart';
 
 void main() async {
   print("Getting html...");
@@ -27,9 +28,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.lightBlue,
+        primarySwatch: Colors.grey,
       ),
-      home: MyHomePage(htmlData, cssData, title: 'Wiktionary')
+      home: Scaffold(
+        body: SafeArea(
+          child: MainScreen()
+        ) /*MyHomePage(htmlData, cssData, title: 'Wiktionary')*/
+      )
     );
   }
 }

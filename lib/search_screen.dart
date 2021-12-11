@@ -5,32 +5,64 @@ import 'custom_buttons.dart';
 import 'debug.dart';
 
 final List<String> dummySearches = <String>[
-  'szołdra', 'snycerz', 'acquiesce', 'herfallen',
-  'głowica', 'penna', 'esquiver', 'srbski',
-  'szołdra', 'snycerz', 'acquiesce', 'herfallen',
-  'szołdra', 'snycerz', 'acquiesce', 'herfallen',
-  'szołdra', 'snycerz', 'acquiesce', 'herfallen',
-  'szołdra', 'snycerz', 'acquiesce', 'herfallen',
-  'szołdra', 'snycerz', 'acquiesce', 'herfallen',
-  'szołdra', 'snycerz', 'acquiesce', 'herfallen',
-  'szołdra', 'snycerz', 'acquiesce', 'herfallen'
+  'szołdra',
+  'snycerz',
+  'acquiesce',
+  'herfallen',
+  'głowica',
+  'penna',
+  'esquiver',
+  'srbski',
+  'szołdra',
+  'snycerz',
+  'acquiesce',
+  'herfallen',
+  'szołdra',
+  'snycerz',
+  'acquiesce',
+  'herfallen',
+  'szołdra',
+  'snycerz',
+  'acquiesce',
+  'herfallen',
+  'szołdra',
+  'snycerz',
+  'acquiesce',
+  'herfallen',
+  'szołdra',
+  'snycerz',
+  'acquiesce',
+  'herfallen',
+  'szołdra',
+  'snycerz',
+  'acquiesce',
+  'herfallen',
+  'szołdra',
+  'snycerz',
+  'acquiesce',
+  'herfallen'
 ];
 
 class SearchScreen extends StatelessWidget {
+  const SearchScreen() : super(key: const Key('SearchScreen'));
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SearchBarWithBackButton(),
-        HistoryHeader(),
+        const _SearchBarWithBackButton(),
+        _HistoryHeader(),
         GenericEntryList(dummySearches)
-      ]
+      ],
     );
   }
 }
 
-class SearchBarWithBackButton extends StatelessWidget {
+class _SearchBarWithBackButton extends StatelessWidget {
+  const _SearchBarWithBackButton()
+      : super(key: const Key('_SearchBarWithBackButton'));
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -39,18 +71,16 @@ class SearchBarWithBackButton extends StatelessWidget {
         children: [
           CustomBackButton(),
           Expanded(
-            child: Container(
-              padding: EdgeInsets.only(left: 10, right: 10),
-              child: SearchBar()
-            )
-          ),
-        ]
-      )
+              child: Container(
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  child: const SearchBar())),
+        ],
+      ),
     );
   }
 }
 
-class HistoryHeader extends StatelessWidget {
+class _HistoryHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -60,18 +90,21 @@ class HistoryHeader extends StatelessWidget {
             padding: const EdgeInsets.only(left: 20, top: 10, bottom: 20),
             child: const Text(
               'Recent searches:',
-              style: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold
-              )
-            )
-          )  
+              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            ),
+          ),
         ),
         Container(
-          padding: EdgeInsets.only(right: 20, bottom: 10),
-          child: CustomButton(Icons.delete, () { showSnackBar(context, 'Supprimer l\'histoire'); }, size: 32.0)
+          padding: const EdgeInsets.only(right: 20, bottom: 10),
+          child: CustomButton(
+            Icons.delete,
+            () {
+              showSnackBar(context, 'Supprimer l\'histoire');
+            },
+            size: 32.0,
+          ),
         )
-      ]
+      ],
     );
   }
 }

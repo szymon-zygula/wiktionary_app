@@ -114,7 +114,7 @@ class ArticleViewer extends StatelessWidget {
   final String articleName;
 
   ArticleViewer(this.articleLanguage, this.articleName)
-      : super(key: Key("$articleLanguage:$articleName"));
+      : super(key: Key("ArticleViewer:$articleLanguage:$articleName"));
 
   @override
   Widget build(BuildContext context) {

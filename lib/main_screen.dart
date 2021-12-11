@@ -1,27 +1,26 @@
 import 'package:flutter/material.dart';
 import 'search_bar.dart';
-import 'article_viewer.dart';
 
 class MainScreen extends StatelessWidget {
-  const MainScreen() : super(key: const Key(""));
+  const MainScreen() : super(key: const Key('_MainScreen'));
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const WiktionaryHeader(),
+        const _WiktionaryHeader(),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: SearchBar(),
+          child: const SearchBar(),
         )
       ],
     );
   }
 }
 
-class WiktionaryHeader extends StatelessWidget {
-  const WiktionaryHeader() : super(key: const Key(""));
+class _WiktionaryHeader extends StatelessWidget {
+  const _WiktionaryHeader() : super(key: const Key('_WiktionaryHeader'));
 
   @override
   Widget build(BuildContext context) {

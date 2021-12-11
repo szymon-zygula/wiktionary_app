@@ -99,7 +99,8 @@ class _LanguageListState extends State<_LanguageList> {
 }
 
 class _HeaderBarWithBackButton extends StatelessWidget {
-  const _HeaderBarWithBackButton() : super(key: const Key(''));
+  const _HeaderBarWithBackButton()
+      : super(key: const Key('_HeaderBarWithBackButton'));
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +117,7 @@ class _HeaderBarWithBackButton extends StatelessWidget {
 }
 
 class _HeaderBar extends StatelessWidget {
-  const _HeaderBar() : super(key: const Key(''));
+  const _HeaderBar() : super(key: const Key('_HeaderBar'));
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +138,7 @@ class LanguageScreen extends StatelessWidget {
   final String articleName;
 
   LanguageScreen(this.articleLanguage, this.articleName)
-      : super(key: Key('$articleLanguage:$articleName'));
+      : super(key: Key('LanguageScreen:$articleLanguage:$articleName'));
 
   @override
   Widget build(BuildContext context) {

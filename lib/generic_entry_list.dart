@@ -4,7 +4,8 @@ import 'debug.dart';
 class GenericEntryList extends StatelessWidget {
   final List<String> entries;
 
-  GenericEntryList(this.entries);
+  GenericEntryList(this.entries)
+      : super(key: Key('GenericEntryList:${entries.toString()}'));
 
   @override
   Widget build(BuildContext context) {
@@ -12,17 +13,17 @@ class GenericEntryList extends StatelessWidget {
       child: ListView.builder(
         itemCount: entries.length,
         itemBuilder: (BuildContext context, int index) {
-          return GenericEntry(entries[index]);
-        }
-      )
+          return _GenericEntry(entries[index]);
+        },
+      ),
     );
   }
 }
 
-class GenericEntry extends StatelessWidget {
+class _GenericEntry extends StatelessWidget {
   final String entry;
 
-  GenericEntry(this.entry);
+  _GenericEntry(this.entry) : super(key: Key('GenericEntry:$entry'));
 
   @override
   Widget build(BuildContext context) {
@@ -34,11 +35,9 @@ class GenericEntry extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         child: Text(
           entry,
-          style: const TextStyle(
-            fontSize: 18
-          )
-        )
-      )
+          style: const TextStyle(fontSize: 18),
+        ),
+      ),
     );
   }
 }

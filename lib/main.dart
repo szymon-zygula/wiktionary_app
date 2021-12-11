@@ -5,11 +5,11 @@ import 'language_screen.dart';
 import 'search_screen.dart';
 
 void main() async {
-  runApp(const MyApp());
+  runApp(const WiktionaryApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp() : super(key: const Key(""));
+class WiktionaryApp extends StatelessWidget {
+  const WiktionaryApp() : super(key: const Key('MyApp'));
 
   @override
   Widget build(BuildContext context) {

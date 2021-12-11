@@ -5,22 +5,23 @@ import 'debug.dart';
 import 'article_viewer.dart';
 
 class ArticleScreen extends StatelessWidget {
-  const ArticleScreen() : super(key: const Key(""));
+  const ArticleScreen() : super(key: const Key('ArticleScreen'));
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SearchBarWithButtons(),
+        const _SearchBarWithButtons(),
         ArticleViewer('en', 'manger'),
       ],
     );
   }
 }
 
-class SearchBarWithButtons extends StatelessWidget {
-  const SearchBarWithButtons() : super(key: const Key(""));
+class _SearchBarWithButtons extends StatelessWidget {
+  const _SearchBarWithButtons()
+      : super(key: const Key('_SearchBarWithButtons'));
 
   @override
   Widget build(BuildContext context) {
@@ -28,11 +29,11 @@ class SearchBarWithButtons extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       child: Row(
         children: [
-          CustomBackButton(),
+          const CustomBackButton(),
           Expanded(
             child: Container(
               padding: const EdgeInsets.only(left: 10, right: 10),
-              child: SearchBar(),
+              child: const SearchBar(),
             ),
           ),
           CustomButton(Icons.language, () {

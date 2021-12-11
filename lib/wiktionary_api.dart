@@ -11,11 +11,11 @@ const apiPath = "/w/api.php";
 const apiOmnipresentParams = "format=json";
 const apiGetLanguagesParams = "action=parse&prop=langlinks";
 
-String getApiUrl(String langCode) {
+String _getApiUrl(String langCode) {
   return "$protocol://$langCode.$wiktionaryDomain/$apiPath?$apiOmnipresentParams";
 }
 
-String getSiteUrl(String langCode) {
+String _getSiteUrl(String langCode) {
   return "$protocol://$langCode.$wiktionaryDomain/wiki/";
 }
 
@@ -38,7 +38,7 @@ class LanguageDefinition {
 
 Future<List<LanguageDefinition>> getArticleLanguages(
     String lang, String page) async {
-  String url = "${getApiUrl(lang)}&$apiGetLanguagesParams&page=$page";
+  String url = "${_getApiUrl(lang)}&$apiGetLanguagesParams&page=$page";
   http.Response res = await http.get(Uri.parse(url));
   Map<String, dynamic> jsonRes = jsonDecode(res.body.toString());
   List<dynamic> unparsedLangs = jsonRes["parse"]["langlinks"];
@@ -52,7 +52,7 @@ Future<List<LanguageDefinition>> getArticleLanguages(
 }
 
 Future<dom.Document> getArticle(String lang, String name) async {
-  String url = "${getSiteUrl(lang)}$name";
+  String url = "${_getSiteUrl(lang)}$name";
   http.Response res = await http.get(Uri.parse(url));
   String body = res.body.toString();
   dom.Document document = htmlparser.parse(body);

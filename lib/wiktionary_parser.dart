@@ -17,25 +17,25 @@ void attachCss(dom.Document document, String css) {
   document.head!.append(style);
 }
 
-void extractContent(dom.Document document) {
+void _extractContent(dom.Document document) {
   String articleText =
       document.getElementsByClassName("mw-parser-output").first.innerHtml;
   document.documentElement!.innerHtml = articleText;
 }
 
-void removeAudio(dom.Document document) {
+void _removeAudio(dom.Document document) {
   document.getElementsByClassName("audiotable").forEach(removeParent);
 }
 
-void removeEditSections(dom.Document document) {
+void _removeEditSections(dom.Document document) {
   document.getElementsByClassName("mw-editsection").forEach(removeSelf);
 }
 
-void removePageActionsMenu(dom.Document document) {
+void _removePageActionsMenu(dom.Document document) {
   document.getElementsByClassName("page-actions-menu").forEach(removeSelf);
 }
 
-void removeScripts(dom.Document document) {
+void _removeScripts(dom.Document document) {
   document.getElementsByTagName("script").forEach(removeSelf);
 }
 
@@ -46,13 +46,13 @@ void convertTag(dom.Document document, dom.Element element, String newTag) {
   element.replaceWith(newElement);
 }
 
-void removeExternalLinks(dom.Document document) {
+void _removeExternalLinks(dom.Document document) {
   document
       .getElementsByClassName("extiw")
       .forEach((el) => convertTag(document, el, 'span'));
 }
 
-void removeAudiometa(dom.Document document) {
+void _removeAudiometa(dom.Document document) {
   document.getElementsByClassName("audiometa").forEach(removeSelf);
 }
 
@@ -60,11 +60,11 @@ void extractOnlyChild(dom.Element element) {
   element.replaceWith(element.firstChild!);
 }
 
-void removeLazyLoadedImages(dom.Document document) {
+void _removeLazyLoadedImages(dom.Document document) {
   document.getElementsByClassName("lazy-image-placeholder").forEach(removeSelf);
 }
 
-void removeLinksFromImages(dom.Document document) {
+void _removeLinksFromImages(dom.Document document) {
   document.getElementsByClassName("image").forEach(extractOnlyChild);
 }
 
@@ -73,7 +73,7 @@ void makeResourceLinkAbsolute(dom.Element element) {
       wiktionary_api.protocol + ":" + element.attributes["src"]!;
 }
 
-void makeResourceLinksAbsolute(dom.Document document) {
+void _makeResourceLinksAbsolute(dom.Document document) {
   document.getElementsByTagName("img").forEach(makeResourceLinkAbsolute);
   document.getElementsByTagName("source").forEach(makeResourceLinkAbsolute);
 }
@@ -88,21 +88,21 @@ void extractNoscript(dom.Document document, dom.Element element) {
   element.replaceWith(replacement);
 }
 
-void extractNoscripts(dom.Document document) {
+void _extractNoscripts(dom.Document document) {
   document
       .getElementsByTagName("noscript")
       .forEach((el) => extractNoscript(document, el));
 }
 
-void removeWordOfTheDayInfo(dom.Document document) {
+void _removeWordOfTheDayInfo(dom.Document document) {
   document.getElementsByClassName("was-wotd").forEach(removeSelf);
 }
 
-void removeNavigation(dom.Document document) {
+void _removeNavigation(dom.Document document) {
   document.getElementsByClassName("toc").forEach(removeSelf);
 }
 
-void fixInlineBackgroundColor(dom.Document document) {
+void _fixInlineBackgroundColor(dom.Document document) {
   String inner = document.documentElement!.innerHtml;
   String fixedInner = inner.replaceAll("background:", "background-color:");
   document.documentElement!.innerHtml = fixedInner;
@@ -119,13 +119,13 @@ void appendStyle(dom.Element element, String style) {
   element.attributes['style'] = newStyle + style + ";";
 }
 
-void centerTableHeaders(dom.Document document) {
+void _centerTableHeaders(dom.Document document) {
   document
       .getElementsByTagName("th")
       .forEach((el) => appendStyle(el, "text-align:center"));
 }
 
-void styleTables(dom.Document document) {
+void _styleTables(dom.Document document) {
   document
       .getElementsByTagName("table")
       .forEach((el) => appendStyle(el, "border: 1px solid black"));
@@ -146,7 +146,7 @@ String removeUnitsFromString(String str, String unit) {
   return str;
 }
 
-void removeUnsupportedUnits(dom.Document document) {
+void _removeUnsupportedUnits(dom.Document document) {
   String inner = document.documentElement!.innerHtml;
   inner = removeUnitsFromString(inner, 'em');
   inner = removeUnitsFromString(inner, 'rem');
@@ -156,30 +156,30 @@ void removeUnsupportedUnits(dom.Document document) {
 }
 
 void cleanDocument(dom.Document document) {
-  extractContent(document);
+  _extractContent(document);
 
-  removeAudio(document);
+  _removeAudio(document);
 
-  removeEditSections(document);
-  removePageActionsMenu(document);
+  _removeEditSections(document);
+  _removePageActionsMenu(document);
 
-  removeScripts(document);
-  extractNoscripts(document);
+  _removeScripts(document);
+  _extractNoscripts(document);
 
-  removeExternalLinks(document);
-  removeAudiometa(document);
+  _removeExternalLinks(document);
+  _removeAudiometa(document);
 
-  removeLazyLoadedImages(document);
-  makeResourceLinksAbsolute(document);
-  removeLinksFromImages(document);
+  _removeLazyLoadedImages(document);
+  _makeResourceLinksAbsolute(document);
+  _removeLinksFromImages(document);
 
-  removeWordOfTheDayInfo(document);
+  _removeWordOfTheDayInfo(document);
 
-  removeNavigation(document);
+  _removeNavigation(document);
 
-  fixInlineBackgroundColor(document);
-  centerTableHeaders(document);
-  styleTables(document);
+  _fixInlineBackgroundColor(document);
+  _centerTableHeaders(document);
+  _styleTables(document);
 
-  removeUnsupportedUnits(document);
+  _removeUnsupportedUnits(document);
 }

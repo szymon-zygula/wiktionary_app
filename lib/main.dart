@@ -30,14 +30,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.grey,
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.grey,
+      ),
+      home: Scaffold(
+        body: SafeArea(
+          child: ArticleScreen(),
+          // child: MyHomePage(htmlData, cssData, title: 'Wiktionary')
         ),
-        home: Scaffold(
-            body: SafeArea(
-                //   child: ArticleScreen()
-                child: MyHomePage(htmlData, cssData, title: 'Wiktionary'))));
+      ),
+    );
   }
 }
 
@@ -74,9 +77,12 @@ class _MyHomePageState extends State<MyHomePage> {
             },
             customRender: {
               "table": (RenderContext context, Widget child) {
-                return SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: (context.tree as TableLayoutElement).toWidget(context),
+                return Expanded(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child:
+                        (context.tree as TableLayoutElement).toWidget(context),
+                  ),
                 );
               }
             }),

@@ -26,7 +26,8 @@ class LanguageDefinition {
 
   LanguageDefinition._(this.code, this.name, this.autonym);
   static LanguageDefinition fromUnparsed(dynamic apiObject) {
-    return LanguageDefinition._(apiObject["lang"], apiObject["langname"], apiObject["autonym"]);
+    return LanguageDefinition._(
+        apiObject["lang"], apiObject["langname"], apiObject["autonym"]);
   }
 
   @override
@@ -35,14 +36,15 @@ class LanguageDefinition {
   }
 }
 
-Future<List<LanguageDefinition>> getArticleLanguages(String lang, int pageid) async {
+Future<List<LanguageDefinition>> getArticleLanguages(
+    String lang, int pageid) async {
   String url = "${getApiUrl(lang)}&$apiGetLanguagesParams&pageid=$pageid";
   http.Response res = await http.get(Uri.parse(url));
   Map<String, dynamic> jsonRes = jsonDecode(res.body.toString());
   List<dynamic> unparsedLangs = jsonRes["parse"]["langlinks"];
 
   List<LanguageDefinition> langs = [];
-  for(dynamic unparsedLang in unparsedLangs) {
+  for (dynamic unparsedLang in unparsedLangs) {
     langs.add(LanguageDefinition.fromUnparsed(unparsedLang));
   }
 

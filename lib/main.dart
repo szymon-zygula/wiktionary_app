@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       ),
       home: Scaffold(
         body: SafeArea(
-          child: LanguageScreen(),
+          child: LanguageScreen('en', 'spaghetti'),
         ),
       ),
     );

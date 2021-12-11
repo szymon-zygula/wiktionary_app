@@ -37,8 +37,8 @@ class LanguageDefinition {
 }
 
 Future<List<LanguageDefinition>> getArticleLanguages(
-    String lang, int pageid) async {
-  String url = "${getApiUrl(lang)}&$apiGetLanguagesParams&pageid=$pageid";
+    String lang, String page) async {
+  String url = "${getApiUrl(lang)}&$apiGetLanguagesParams&page=$page";
   http.Response res = await http.get(Uri.parse(url));
   Map<String, dynamic> jsonRes = jsonDecode(res.body.toString());
   List<dynamic> unparsedLangs = jsonRes["parse"]["langlinks"];
@@ -62,14 +62,3 @@ Future<dom.Document> getArticle(String lang, String name) async {
 
 //TODO: https://en.wiktionary.org/w/api.php?action=opensearch&search=uberweisen
 // Future<> search...
-
-
-
-
-
-
-
-
-
-
-

@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
       ),
       home: Scaffold(
         body: SafeArea(
-          child: ArticleScreen(),
+          child: MainScreen(),
           // child: MyHomePage(htmlData, cssData, title: 'Wiktionary')
         ),
       ),

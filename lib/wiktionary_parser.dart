@@ -18,7 +18,8 @@ void attachCss(dom.Document document, String css) {
 }
 
 void extractContent(dom.Document document) {
-  String articleText = document.getElementsByClassName("mw-parser-output").first.innerHtml;
+  String articleText =
+      document.getElementsByClassName("mw-parser-output").first.innerHtml;
   document.documentElement!.innerHtml = articleText;
 }
 
@@ -46,7 +47,9 @@ void convertTag(dom.Document document, dom.Element element, String newTag) {
 }
 
 void removeExternalLinks(dom.Document document) {
-  document.getElementsByClassName("extiw").forEach((el) => convertTag(document, el, 'span'));
+  document
+      .getElementsByClassName("extiw")
+      .forEach((el) => convertTag(document, el, 'span'));
 }
 
 void removeAudiometa(dom.Document document) {
@@ -66,7 +69,8 @@ void removeLinksFromImages(dom.Document document) {
 }
 
 void makeResourceLinkAbsolute(dom.Element element) {
-  element.attributes["src"] = wiktionary_api.protocol + ":" + element.attributes["src"]!;
+  element.attributes["src"] =
+      wiktionary_api.protocol + ":" + element.attributes["src"]!;
 }
 
 void makeResourceLinksAbsolute(dom.Document document) {
@@ -85,7 +89,9 @@ void extractNoscript(dom.Document document, dom.Element element) {
 }
 
 void extractNoscripts(dom.Document document) {
-  document.getElementsByTagName("noscript").forEach((el) => extractNoscript(document, el));
+  document
+      .getElementsByTagName("noscript")
+      .forEach((el) => extractNoscript(document, el));
 }
 
 void removeWordOfTheDayInfo(dom.Document document) {
@@ -104,10 +110,9 @@ void fixInlineBackgroundColor(dom.Document document) {
 
 void appendStyle(dom.Element element, String style) {
   String newStyle;
-  if(element.attributes['style'] == null) {
+  if (element.attributes['style'] == null) {
     newStyle = "";
-  }
-  else {
+  } else {
     newStyle = element.attributes['style']! + ";";
   }
 
@@ -115,19 +120,39 @@ void appendStyle(dom.Element element, String style) {
 }
 
 void centerTableHeaders(dom.Document document) {
-  document.getElementsByTagName("th")
-    .forEach((el) => appendStyle(el, "text-align:center"));
+  document
+      .getElementsByTagName("th")
+      .forEach((el) => appendStyle(el, "text-align:center"));
 }
 
 void styleTables(dom.Document document) {
-  document.getElementsByTagName("table")
-    .forEach((el) => appendStyle(el, "border: 1px solid black"));
-  document.getElementsByTagName("th")
-    .forEach((el) => appendStyle(el, "border: 1px solid black"));
-  document.getElementsByTagName("td")
-    .forEach((el) => appendStyle(el, "border: 1px solid black"));
-  document.getElementsByTagName("tr")
-    .forEach((el) => appendStyle(el, "border: 1px solid black"));
+  document
+      .getElementsByTagName("table")
+      .forEach((el) => appendStyle(el, "border: 1px solid black"));
+  document
+      .getElementsByTagName("th")
+      .forEach((el) => appendStyle(el, "border: 1px solid black"));
+  document
+      .getElementsByTagName("td")
+      .forEach((el) => appendStyle(el, "border: 1px solid black"));
+  document
+      .getElementsByTagName("tr")
+      .forEach((el) => appendStyle(el, "border: 1px solid black"));
+}
+
+String removeUnitsFromString(String str, String unit) {
+  str = str.replaceAll(RegExp(r'width: ?\d+' + unit + ';?'), '');
+  str = str.replaceAll(RegExp(r'height: ?\d+' + unit + ';?'), '');
+  return str;
+}
+
+void removeUnsupportedUnits(dom.Document document) {
+  String inner = document.documentElement!.innerHtml;
+  inner = removeUnitsFromString(inner, 'em');
+  inner = removeUnitsFromString(inner, 'rem');
+  inner = removeUnitsFromString(inner, 'vh');
+  inner = removeUnitsFromString(inner, 'vw');
+  document.documentElement!.innerHtml = inner;
 }
 
 void cleanDocument(dom.Document document) {
@@ -155,4 +180,6 @@ void cleanDocument(dom.Document document) {
   fixInlineBackgroundColor(document);
   centerTableHeaders(document);
   styleTables(document);
+
+  removeUnsupportedUnits(document);
 }

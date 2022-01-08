@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'router_delegate.dart';
 
 class SearchBar extends StatelessWidget {
@@ -20,8 +21,8 @@ class SearchBar extends StatelessWidget {
         maxLines: 1,
         onSubmitted: onSubmitted,
         cursorColor: const Color.fromRGBO(64, 64, 64, 1.0),
-        decoration: const InputDecoration(
-          hintText: 'Search',
+        decoration: InputDecoration(
+          hintText: AppLocalizations.of(context)!.search,
           border: InputBorder.none,
         ),
       ),
@@ -51,10 +52,11 @@ class DummySearchBar extends StatelessWidget {
           }
 
           MyRouterDelegate routerDelegate = Get.find();
-          routerDelegate.pushPage('/search', arguments: 'en');
+          routerDelegate.pushPage('/search',
+              arguments: Localizations.localeOf(context).languageCode);
         },
-        decoration: const InputDecoration(
-          hintText: 'Search',
+        decoration: InputDecoration(
+          hintText: AppLocalizations.of(context)!.search,
           border: InputBorder.none,
         ),
       ),

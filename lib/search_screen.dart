@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'router_delegate.dart';
 import 'search_bar.dart';
 import 'generic_entry_list.dart';
@@ -258,9 +259,12 @@ class _HistoryHeader extends StatelessWidget {
         Expanded(
           child: Container(
             padding: const EdgeInsets.only(left: 20, top: 10, bottom: 20),
-            child: const Text(
-              'Recent searches:',
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            child: Text(
+              AppLocalizations.of(context)!.recentSearches,
+              style: const TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),
@@ -306,8 +310,8 @@ class _LanguageChangeButton extends StatelessWidget {
     return CustomButton(Icons.language, () {
       MyRouterDelegate routerDelegate = Get.find();
       routerDelegate.pushPage('/language', arguments: {
-        'articleLanguage': 'en',
-        'articleName': mainPageName,
+        'articleLanguage': Localizations.localeOf(context).languageCode,
+        'articleName': AppLocalizations.of(context)!.mainPage,
         'insteadOfNavigation': (language) {
           MyRouterDelegate routerDelegate = Get.find();
           routerDelegate.popRoute(); // Current search screen

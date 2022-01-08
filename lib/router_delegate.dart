@@ -48,8 +48,8 @@ class MyRouterDelegate extends RouterDelegate<List<RouteSettings>>
         child = const MainScreen();
         break;
       case '/article':
-        final Map<String, String> args =
-            routeSettings.arguments as Map<String, String>;
+        final Map<String, String?> args =
+            routeSettings.arguments as Map<String, String?>;
 
         child = ArticleScreen(
           language: args['language']!,
@@ -65,7 +65,7 @@ class MyRouterDelegate extends RouterDelegate<List<RouteSettings>>
 
         child = LanguageScreen(
           articleLanguage: args['articleLanguage']! as String,
-          articleName: args['articleName']! as String,
+          articleName: args['articleName'] as String?,
           insteadOfNavigation: args['insteadOfNavigation'] as Function(String)?,
         );
         break;

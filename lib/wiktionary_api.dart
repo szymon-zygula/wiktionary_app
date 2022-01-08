@@ -1,9 +1,9 @@
-import 'wiktionary_parser.dart' as wiktionary_parser;
-
 import 'package:http/http.dart' as http;
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' as htmlparser;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:convert';
+import 'wiktionary_parser.dart' as wiktionary_parser;
 
 const protocol = 'https';
 const wiktionaryDomain = 'wiktionary.org';
@@ -11,7 +11,6 @@ const apiPath = '/w/api.php';
 const apiOmnipresentParams = 'format=json';
 const apiGetLanguagesParams = 'action=parse&prop=langlinks';
 const apiSearchParams = 'action=opensearch';
-const mainPageName = 'Wiktionary:Main_Page';
 
 String _getApiUrl(String langCode) {
   return '$protocol://$langCode.$wiktionaryDomain/$apiPath?$apiOmnipresentParams';
@@ -45,8 +44,12 @@ Future<dynamic> _getJson(String url) async {
 }
 
 Future<List<LanguageDefinition>> getArticleLanguages(
-    String lang, String page) async {
-  String url = '${_getApiUrl(lang)}&$apiGetLanguagesParams&page=$page';
+    String lang, String? page) async {
+  String url = '${_getApiUrl(lang)}&$apiGetLanguagesParams';
+  if (page != null) {
+    url += '&page=$page';
+  }
+
   Map<String, dynamic> jsonRes = await _getJson(url);
   List<dynamic> unparsedLangs = jsonRes['parse']['langlinks'];
 

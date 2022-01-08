@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:get/get.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'router_delegate.dart';
 import 'wiktionary_api.dart';
 import 'generic_entry_list.dart';
@@ -13,7 +14,7 @@ abstract class _LanguageListEvent extends Equatable {
 
 class _LanguageListLoadedEvent extends _LanguageListEvent {
   final List<LanguageDefinition> languages;
-  final String articleName;
+  final String? articleName;
   final Function(String)? insteadOfNavigation;
 
   const _LanguageListLoadedEvent(
@@ -46,7 +47,7 @@ class LanguageListLoadingState extends _LanguageListBlocState {
 }
 
 class _LanguageListLoadedState extends _LanguageListBlocState {
-  final String articleName;
+  final String? articleName;
   final List<LanguageDefinition> languages;
   final Function(String)? insteadOfNavigation;
   const _LanguageListLoadedState(
@@ -72,7 +73,7 @@ class _LanguageListLoadedState extends _LanguageListBlocState {
         }
 
         routerDelegate.popRoute(); // Pop article screen in previous laguage
-        Map<String, String> args = {
+        Map<String, String?> args = {
           'language': lang as String,
           'articleName': articleName,
         };
@@ -99,7 +100,7 @@ class _LanguageListBloc
 }
 
 class _LanguageList extends StatefulWidget {
-  final String articleName;
+  final String? articleName;
   final String articleLanguage;
   final Function(String)? insteadOfNavigation;
 
@@ -157,9 +158,12 @@ class _HeaderBar extends StatelessWidget {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.only(left: 20),
-        child: const Text(
-          'Available languages',
-          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+        child: Text(
+          AppLocalizations.of(context)!.availableLanguages,
+          style: const TextStyle(
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
@@ -168,7 +172,7 @@ class _HeaderBar extends StatelessWidget {
 
 class LanguageScreen extends StatelessWidget {
   final String articleLanguage;
-  final String articleName;
+  final String? articleName;
   final Function(String)? insteadOfNavigation;
 
   LanguageScreen(

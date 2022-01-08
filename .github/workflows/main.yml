@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-android:
     runs-on: ubuntu-latest
 
     steps:
@@ -33,5 +33,26 @@ jobs:
       - name: Build Android app
         run: flutter build apk
 
+  build-ios:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Flutter action
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '2.8.0'
+          channel: 'stable'
+
+      - name: Check flutter version
+        run: flutter --version
+
+      - name: Setup project
+        run: flutter pub get
+
+      - name: Run tests
+        run: flutter test
+
       - name: Build iOS app
-        run: flutter build ios --release --no-codedesign
+        run: flutter build ios --release --no-codesign

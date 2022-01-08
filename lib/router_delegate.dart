@@ -69,7 +69,7 @@ class MyRouterDelegate extends RouterDelegate<List<RouteSettings>>
         );
         break;
       default:
-        throw "Invalid route selected!";
+        throw 'Invalid route selected!';
     }
 
     return MaterialPage(

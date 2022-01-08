@@ -12,31 +12,31 @@ void removeParent(dom.Element element) {
 }
 
 void attachCss(dom.Document document, String css) {
-  dom.Element style = document.createElement("style");
+  dom.Element style = document.createElement('style');
   style.innerHtml = css;
   document.head!.append(style);
 }
 
 void _extractContent(dom.Document document) {
   String articleText =
-      document.getElementsByClassName("mw-parser-output").first.innerHtml;
+      document.getElementsByClassName('mw-parser-output').first.innerHtml;
   document.documentElement!.innerHtml = articleText;
 }
 
 void _removeAudio(dom.Document document) {
-  document.getElementsByClassName("audiotable").forEach(removeParent);
+  document.getElementsByClassName('audiotable').forEach(removeParent);
 }
 
 void _removeEditSections(dom.Document document) {
-  document.getElementsByClassName("mw-editsection").forEach(removeSelf);
+  document.getElementsByClassName('mw-editsection').forEach(removeSelf);
 }
 
 void _removePageActionsMenu(dom.Document document) {
-  document.getElementsByClassName("page-actions-menu").forEach(removeSelf);
+  document.getElementsByClassName('page-actions-menu').forEach(removeSelf);
 }
 
 void _removeScripts(dom.Document document) {
-  document.getElementsByTagName("script").forEach(removeSelf);
+  document.getElementsByTagName('script').forEach(removeSelf);
 }
 
 void convertTag(dom.Document document, dom.Element element, String newTag) {
@@ -48,12 +48,12 @@ void convertTag(dom.Document document, dom.Element element, String newTag) {
 
 void _removeExternalLinks(dom.Document document) {
   document
-      .getElementsByClassName("extiw")
+      .getElementsByClassName('extiw')
       .forEach((el) => convertTag(document, el, 'span'));
 }
 
 void _removeAudiometa(dom.Document document) {
-  document.getElementsByClassName("audiometa").forEach(removeSelf);
+  document.getElementsByClassName('audiometa').forEach(removeSelf);
 }
 
 void extractOnlyChild(dom.Element element) {
@@ -61,28 +61,28 @@ void extractOnlyChild(dom.Element element) {
 }
 
 void _removeLazyLoadedImages(dom.Document document) {
-  document.getElementsByClassName("lazy-image-placeholder").forEach(removeSelf);
+  document.getElementsByClassName('lazy-image-placeholder').forEach(removeSelf);
 }
 
 void _removeLinksFromImages(dom.Document document) {
-  document.getElementsByClassName("image").forEach(extractOnlyChild);
+  document.getElementsByClassName('image').forEach(extractOnlyChild);
 }
 
 void makeResourceLinkAbsolute(dom.Element element) {
-  element.attributes["src"] =
-      wiktionary_api.protocol + ":" + element.attributes["src"]!;
+  element.attributes['src'] =
+      wiktionary_api.protocol + ':' + element.attributes['src']!;
 }
 
 void _makeResourceLinksAbsolute(dom.Document document) {
-  document.getElementsByTagName("img").forEach(makeResourceLinkAbsolute);
-  document.getElementsByTagName("source").forEach(makeResourceLinkAbsolute);
+  document.getElementsByTagName('img').forEach(makeResourceLinkAbsolute);
+  document.getElementsByTagName('source').forEach(makeResourceLinkAbsolute);
 }
 
 void extractNoscript(dom.Document document, dom.Element element) {
   String inner = element.innerHtml;
-  String innerParsed = inner.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
+  String innerParsed = inner.replaceAll('&lt;', '<').replaceAll('&gt;', '>');
 
-  dom.Element replacement = document.createElement("DIV");
+  dom.Element replacement = document.createElement('DIV');
   replacement.innerHtml = innerParsed;
 
   element.replaceWith(replacement);
@@ -90,54 +90,54 @@ void extractNoscript(dom.Document document, dom.Element element) {
 
 void _extractNoscripts(dom.Document document) {
   document
-      .getElementsByTagName("noscript")
+      .getElementsByTagName('noscript')
       .forEach((el) => extractNoscript(document, el));
 }
 
 void _removeWordOfTheDayInfo(dom.Document document) {
-  document.getElementsByClassName("was-wotd").forEach(removeSelf);
+  document.getElementsByClassName('was-wotd').forEach(removeSelf);
 }
 
 void _removeNavigation(dom.Document document) {
-  document.getElementsByClassName("toc").forEach(removeSelf);
+  document.getElementsByClassName('toc').forEach(removeSelf);
 }
 
 void _fixInlineBackgroundColor(dom.Document document) {
   String inner = document.documentElement!.innerHtml;
-  String fixedInner = inner.replaceAll("background:", "background-color:");
+  String fixedInner = inner.replaceAll('background:', 'background-color:');
   document.documentElement!.innerHtml = fixedInner;
 }
 
 void appendStyle(dom.Element element, String style) {
   String newStyle;
   if (element.attributes['style'] == null) {
-    newStyle = "";
+    newStyle = '';
   } else {
-    newStyle = element.attributes['style']! + ";";
+    newStyle = element.attributes['style']! + ';';
   }
 
-  element.attributes['style'] = newStyle + style + ";";
+  element.attributes['style'] = newStyle + style + ';';
 }
 
 void _centerTableHeaders(dom.Document document) {
   document
-      .getElementsByTagName("th")
-      .forEach((el) => appendStyle(el, "text-align:center"));
+      .getElementsByTagName('th')
+      .forEach((el) => appendStyle(el, 'text-align:center'));
 }
 
 void _styleTables(dom.Document document) {
   document
-      .getElementsByTagName("table")
-      .forEach((el) => appendStyle(el, "border: 1px solid black"));
+      .getElementsByTagName('table')
+      .forEach((el) => appendStyle(el, 'border: 1px solid black'));
   document
-      .getElementsByTagName("th")
-      .forEach((el) => appendStyle(el, "border: 1px solid black"));
+      .getElementsByTagName('th')
+      .forEach((el) => appendStyle(el, 'border: 1px solid black'));
   document
-      .getElementsByTagName("td")
-      .forEach((el) => appendStyle(el, "border: 1px solid black"));
+      .getElementsByTagName('td')
+      .forEach((el) => appendStyle(el, 'border: 1px solid black'));
   document
-      .getElementsByTagName("tr")
-      .forEach((el) => appendStyle(el, "border: 1px solid black"));
+      .getElementsByTagName('tr')
+      .forEach((el) => appendStyle(el, 'border: 1px solid black'));
 }
 
 String removeUnitsFromString(String str, String unit) {

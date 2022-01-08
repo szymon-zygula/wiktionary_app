@@ -86,8 +86,8 @@ class _SearchedState extends _SearchScreenBlocState {
           results
               .map(
                 (result) => {
-                  "language": "en",
-                  "articleName": result,
+                  'language': 'en',
+                  'articleName': result,
                 },
               )
               .toList(),
@@ -97,7 +97,7 @@ class _SearchedState extends _SearchScreenBlocState {
                 localStorage.getStringList('searchHistory') ?? [];
             Map<String, String> entryMap = entry as Map<String, String>;
             history
-                .add("${entryMap['language']!}||${entryMap['articleName']!}");
+                .add('${entryMap['language']!}||${entryMap['articleName']!}');
             localStorage.setStringList('searchHistory', history);
 
             MyRouterDelegate routerDelegate = Get.find();
@@ -153,7 +153,7 @@ class _SearchScreenBloc
 
   void onSearchPerformed(
       _SearchPerformed event, Emitter<_SearchScreenBlocState> emit) {
-    if (event.query == "") {
+    if (event.query == '') {
       emit(const _HistoryState());
     } else {
       emit(const _LoadingSearchState());
@@ -217,7 +217,7 @@ class _SearchBarWithBackButton extends StatelessWidget {
                   BlocProvider.of<_SearchScreenBloc>(context)
                       .add(_SearchPerformed(query));
 
-                  if (query == "") {
+                  if (query == '') {
                     return;
                   }
 

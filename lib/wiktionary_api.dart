@@ -5,19 +5,19 @@ import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' as htmlparser;
 import 'dart:convert';
 
-const protocol = "https";
-const wiktionaryDomain = "wiktionary.org";
-const apiPath = "/w/api.php";
-const apiOmnipresentParams = "format=json";
-const apiGetLanguagesParams = "action=parse&prop=langlinks";
-const apiSearchParams = "action=opensearch";
+const protocol = 'https';
+const wiktionaryDomain = 'wiktionary.org';
+const apiPath = '/w/api.php';
+const apiOmnipresentParams = 'format=json';
+const apiGetLanguagesParams = 'action=parse&prop=langlinks';
+const apiSearchParams = 'action=opensearch';
 
 String _getApiUrl(String langCode) {
-  return "$protocol://$langCode.$wiktionaryDomain/$apiPath?$apiOmnipresentParams";
+  return '$protocol://$langCode.$wiktionaryDomain/$apiPath?$apiOmnipresentParams';
 }
 
 String _getSiteUrl(String langCode) {
-  return "$protocol://$langCode.$wiktionaryDomain/wiki/";
+  return '$protocol://$langCode.$wiktionaryDomain/wiki/';
 }
 
 class LanguageDefinition {
@@ -28,12 +28,12 @@ class LanguageDefinition {
   LanguageDefinition._(this.code, this.name, this.autonym);
   static LanguageDefinition fromUnparsed(dynamic apiObject) {
     return LanguageDefinition._(
-        apiObject["lang"], apiObject["langname"], apiObject["autonym"]);
+        apiObject['lang'], apiObject['langname'], apiObject['autonym']);
   }
 
   @override
   String toString() {
-    return "$name ($code): $autonym";
+    return '$name ($code): $autonym';
   }
 }
 
@@ -45,9 +45,9 @@ Future<dynamic> _getJson(String url) async {
 
 Future<List<LanguageDefinition>> getArticleLanguages(
     String lang, String page) async {
-  String url = "${_getApiUrl(lang)}&$apiGetLanguagesParams&page=$page";
+  String url = '${_getApiUrl(lang)}&$apiGetLanguagesParams&page=$page';
   Map<String, dynamic> jsonRes = await _getJson(url);
-  List<dynamic> unparsedLangs = jsonRes["parse"]["langlinks"];
+  List<dynamic> unparsedLangs = jsonRes['parse']['langlinks'];
 
   List<LanguageDefinition> langs = [];
   for (dynamic unparsedLang in unparsedLangs) {
@@ -58,7 +58,7 @@ Future<List<LanguageDefinition>> getArticleLanguages(
 }
 
 Future<dom.Document> getArticle(String lang, String name) async {
-  String url = "${_getSiteUrl(lang)}$name";
+  String url = '${_getSiteUrl(lang)}$name';
   http.Response res = await http.get(Uri.parse(url));
   String body = res.body.toString();
   dom.Document document = htmlparser.parse(body);
@@ -67,7 +67,7 @@ Future<dom.Document> getArticle(String lang, String name) async {
 }
 
 Future<List<String>> getSearchResults(String lang, String query) async {
-  String url = "${_getApiUrl(lang)}&$apiSearchParams&search=$query";
+  String url = '${_getApiUrl(lang)}&$apiSearchParams&search=$query';
   try {
     List<dynamic> jsonRes = await _getJson(url);
     List<String> results =

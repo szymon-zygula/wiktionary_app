@@ -55,7 +55,7 @@ class _LanguageListLoadedState extends _LanguageListBlocState {
   Widget getWidget() {
     return GenericEntryList(
       languages
-          .map((language) => "${language.autonym} (${language.name})")
+          .map((language) => '${language.autonym} (${language.name})')
           .toList(),
       languages.map((language) => language.code).toList(),
       onTap: (lang) {

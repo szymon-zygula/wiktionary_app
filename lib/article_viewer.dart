@@ -67,7 +67,7 @@ class _ArticleViewLoadedState extends _ArticleViewBlocState {
             });
           },
           customRender: {
-            "table": (RenderContext context, Widget child) {
+            'table': (RenderContext context, Widget child) {
               return SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: (context.tree as TableLayoutElement).toWidget(context),
@@ -125,7 +125,7 @@ class ArticleViewer extends StatelessWidget {
   final String articleName;
 
   ArticleViewer(this.articleLanguage, this.articleName)
-      : super(key: Key("ArticleViewer:$articleLanguage:$articleName"));
+      : super(key: Key('ArticleViewer:$articleLanguage:$articleName'));
 
   @override
   Widget build(BuildContext context) {

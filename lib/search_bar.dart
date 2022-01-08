@@ -50,7 +50,7 @@ class DummySearchBar extends StatelessWidget {
           }
 
           MyRouterDelegate routerDelegate = Get.find();
-          routerDelegate.pushPage('/search');
+          routerDelegate.pushPage('/search', arguments: 'en');
         },
         decoration: const InputDecoration(
           hintText: 'Search',

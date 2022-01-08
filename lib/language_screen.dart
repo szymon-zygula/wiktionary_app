@@ -14,8 +14,10 @@ abstract class _LanguageListEvent extends Equatable {
 class _LanguageListLoadedEvent extends _LanguageListEvent {
   final List<LanguageDefinition> languages;
   final String articleName;
+  final Function(String)? insteadOfNavigation;
 
-  const _LanguageListLoadedEvent(this.articleName, this.languages);
+  const _LanguageListLoadedEvent(
+      this.articleName, this.languages, this.insteadOfNavigation);
 
   @override
   List<Object> get props => [languages];
@@ -46,7 +48,9 @@ class LanguageListLoadingState extends _LanguageListBlocState {
 class _LanguageListLoadedState extends _LanguageListBlocState {
   final String articleName;
   final List<LanguageDefinition> languages;
-  const _LanguageListLoadedState(this.articleName, this.languages);
+  final Function(String)? insteadOfNavigation;
+  const _LanguageListLoadedState(
+      this.articleName, this.languages, this.insteadOfNavigation);
 
   @override
   List<Object> get props => [languages];
@@ -61,6 +65,12 @@ class _LanguageListLoadedState extends _LanguageListBlocState {
       onTap: (lang) {
         MyRouterDelegate routerDelegate = Get.find();
         routerDelegate.popRoute(); // Pop language screen
+
+        if (insteadOfNavigation != null) {
+          insteadOfNavigation!(lang as String);
+          return;
+        }
+
         routerDelegate.popRoute(); // Pop article screen in previous laguage
         Map<String, String> args = {
           'language': lang as String,
@@ -83,15 +93,18 @@ class _LanguageListBloc
 
   void onLoad(
       _LanguageListLoadedEvent event, Emitter<_LanguageListBlocState> emit) {
-    emit(_LanguageListLoadedState(event.articleName, event.languages));
+    emit(_LanguageListLoadedState(
+        event.articleName, event.languages, event.insteadOfNavigation));
   }
 }
 
 class _LanguageList extends StatefulWidget {
   final String articleName;
   final String articleLanguage;
+  final Function(String)? insteadOfNavigation;
 
-  const _LanguageList(this.articleLanguage, this.articleName);
+  const _LanguageList(
+      this.articleLanguage, this.articleName, this.insteadOfNavigation);
 
   @override
   State<_LanguageList> createState() => _LanguageListState();
@@ -102,8 +115,8 @@ class _LanguageListState extends State<_LanguageList> {
   void initState() {
     getArticleLanguages(widget.articleLanguage, widget.articleName)
         .then((languages) {
-      BlocProvider.of<_LanguageListBloc>(context)
-          .add(_LanguageListLoadedEvent(widget.articleName, languages));
+      BlocProvider.of<_LanguageListBloc>(context).add(_LanguageListLoadedEvent(
+          widget.articleName, languages, widget.insteadOfNavigation));
     });
     super.initState();
   }
@@ -156,8 +169,12 @@ class _HeaderBar extends StatelessWidget {
 class LanguageScreen extends StatelessWidget {
   final String articleLanguage;
   final String articleName;
+  final Function(String)? insteadOfNavigation;
 
-  LanguageScreen({required this.articleLanguage, required this.articleName})
+  LanguageScreen(
+      {required this.articleLanguage,
+      required this.articleName,
+      this.insteadOfNavigation})
       : super(key: Key('LanguageScreen:$articleLanguage:$articleName'));
 
   @override
@@ -170,7 +187,8 @@ class LanguageScreen extends StatelessWidget {
           create: (context) {
             return _LanguageListBloc();
           },
-          child: _LanguageList(articleLanguage, articleName),
+          child:
+              _LanguageList(articleLanguage, articleName, insteadOfNavigation),
         )
       ],
     );

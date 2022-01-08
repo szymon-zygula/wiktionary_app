@@ -57,15 +57,16 @@ class MyRouterDelegate extends RouterDelegate<List<RouteSettings>>
         );
         break;
       case '/search':
-        child = const SearchScreen();
+        child = SearchScreen(routeSettings.arguments as String);
         break;
       case '/language':
-        final Map<String, String> args =
-            routeSettings.arguments as Map<String, String>;
+        final Map<String, Object> args =
+            routeSettings.arguments as Map<String, Object>;
 
         child = LanguageScreen(
-          articleLanguage: args['articleLanguage']!,
-          articleName: args['articleName']!,
+          articleLanguage: args['articleLanguage']! as String,
+          articleName: args['articleName']! as String,
+          insteadOfNavigation: args['insteadOfNavigation'] as Function(String)?,
         );
         break;
       default:

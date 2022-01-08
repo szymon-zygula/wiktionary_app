@@ -11,6 +11,7 @@ const apiPath = '/w/api.php';
 const apiOmnipresentParams = 'format=json';
 const apiGetLanguagesParams = 'action=parse&prop=langlinks';
 const apiSearchParams = 'action=opensearch';
+const mainPageName = 'Wiktionary:Main_Page';
 
 String _getApiUrl(String langCode) {
   return '$protocol://$langCode.$wiktionaryDomain/$apiPath?$apiOmnipresentParams';

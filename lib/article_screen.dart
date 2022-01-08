@@ -52,7 +52,7 @@ class _SearchBarWithButtons extends StatelessWidget {
           CustomButton(Icons.language, () {
             MyRouterDelegate routerDelegate = Get.find();
             routerDelegate.pushPage('/language', arguments: {
-              'articleLanguage': articleLanguage,
+              'articleLanguage': 'en',
               'articleName': articleName,
             });
           }),

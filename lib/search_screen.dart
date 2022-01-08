@@ -7,7 +7,6 @@ import 'router_delegate.dart';
 import 'search_bar.dart';
 import 'generic_entry_list.dart';
 import 'custom_buttons.dart';
-import 'debug.dart';
 import 'wiktionary_api.dart';
 
 abstract class _SearchScreenEvent extends Equatable {
@@ -15,25 +14,28 @@ abstract class _SearchScreenEvent extends Equatable {
 }
 
 class _SearchPerformed extends _SearchScreenEvent {
+  final String language;
   final String query;
 
-  const _SearchPerformed(this.query);
+  const _SearchPerformed(this.query, this.language);
 
   @override
   List<Object> get props => [query];
 }
 
 class _SearchLoaded extends _SearchScreenEvent {
+  final String language;
   final List<String> results;
 
-  const _SearchLoaded(this.results);
+  const _SearchLoaded(this.results, this.language);
 
   @override
   List<Object> get props => [results];
 }
 
 class _HistoryDeleted extends _SearchScreenEvent {
-  const _HistoryDeleted();
+  final String language;
+  const _HistoryDeleted(this.language);
 
   @override
   List<Object> get props => [];
@@ -45,7 +47,9 @@ abstract class _SearchScreenBlocState extends Equatable {
 }
 
 class _LoadingSearchState extends _SearchScreenBlocState {
-  const _LoadingSearchState();
+  final String language;
+
+  const _LoadingSearchState(this.language);
 
   @override
   List<Object> get props => [];
@@ -54,9 +58,9 @@ class _LoadingSearchState extends _SearchScreenBlocState {
   Widget getWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [
-        _SearchBarWithBackButton(),
-        Expanded(
+      children: [
+        _SearchBarWithBackButton(language),
+        const Expanded(
           child: Align(
             alignment: Alignment.center,
             child: CircularProgressIndicator(),
@@ -69,8 +73,9 @@ class _LoadingSearchState extends _SearchScreenBlocState {
 
 class _SearchedState extends _SearchScreenBlocState {
   final List<String> results;
+  final String language;
 
-  const _SearchedState(this.results);
+  const _SearchedState(this.results, this.language);
 
   @override
   List<Object> get props => [results];
@@ -80,13 +85,13 @@ class _SearchedState extends _SearchScreenBlocState {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const _SearchBarWithBackButton(),
+        _SearchBarWithBackButton(language),
         GenericEntryList(
           results,
           results
               .map(
                 (result) => {
-                  'language': 'en',
+                  'language': language,
                   'articleName': result,
                 },
               )
@@ -111,7 +116,9 @@ class _SearchedState extends _SearchScreenBlocState {
 }
 
 class _HistoryState extends _SearchScreenBlocState {
-  const _HistoryState();
+  final String language;
+
+  const _HistoryState(this.language);
 
   @override
   List<Object> get props => [];
@@ -123,8 +130,8 @@ class _HistoryState extends _SearchScreenBlocState {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const _SearchBarWithBackButton(),
-        _HistoryHeader(),
+        _SearchBarWithBackButton(language),
+        _HistoryHeader(language),
         GenericEntryList(
           history.reversed.map((entry) => entry.split('||')[1]).toList(),
           history.reversed.toList(),
@@ -145,7 +152,7 @@ class _HistoryState extends _SearchScreenBlocState {
 
 class _SearchScreenBloc
     extends Bloc<_SearchScreenEvent, _SearchScreenBlocState> {
-  _SearchScreenBloc() : super(const _HistoryState()) {
+  _SearchScreenBloc(String language) : super(_HistoryState(language)) {
     on<_SearchPerformed>(onSearchPerformed);
     on<_SearchLoaded>(onSearchLoaded);
     on<_HistoryDeleted>(onHistoryDeleted);
@@ -154,16 +161,16 @@ class _SearchScreenBloc
   void onSearchPerformed(
       _SearchPerformed event, Emitter<_SearchScreenBlocState> emit) {
     if (event.query == '') {
-      emit(const _HistoryState());
+      emit(_HistoryState(event.language));
     } else {
-      emit(const _LoadingSearchState());
+      emit(_LoadingSearchState(event.language));
     }
   }
 
   void onSearchLoaded(
       _SearchLoaded event, Emitter<_SearchScreenBlocState> emit) {
     if (state is _LoadingSearchState) {
-      emit(_SearchedState(event.results));
+      emit(_SearchedState(event.results, event.language));
     }
   }
 
@@ -171,12 +178,14 @@ class _SearchScreenBloc
       _HistoryDeleted event, Emitter<_SearchScreenBlocState> emit) {
     SharedPreferences localStorage = Get.find();
     localStorage.setStringList('searchHistory', []);
-    emit(const _HistoryState());
+    emit(_HistoryState(event.language));
   }
 }
 
 class _SearchScreenStateful extends StatefulWidget {
-  const _SearchScreenStateful();
+  final String language;
+
+  const _SearchScreenStateful(this.language);
 
   @override
   State<_SearchScreenStateful> createState() => _SearchScreenState();
@@ -199,7 +208,8 @@ class _SearchScreenState extends State<_SearchScreenStateful> {
 }
 
 class _SearchBarWithBackButton extends StatelessWidget {
-  const _SearchBarWithBackButton()
+  final String language;
+  const _SearchBarWithBackButton(this.language)
       : super(key: const Key('_SearchBarWithBackButton'));
 
   @override
@@ -215,20 +225,21 @@ class _SearchBarWithBackButton extends StatelessWidget {
               child: SearchBar(
                 onSubmitted: (String query) {
                   BlocProvider.of<_SearchScreenBloc>(context)
-                      .add(_SearchPerformed(query));
+                      .add(_SearchPerformed(query, language));
 
                   if (query == '') {
                     return;
                   }
 
-                  getSearchResults('en', query).then((results) {
+                  getSearchResults(language, query).then((results) {
                     BlocProvider.of<_SearchScreenBloc>(context)
-                        .add(_SearchLoaded(results));
+                        .add(_SearchLoaded(results, language));
                   });
                 },
               ),
             ),
           ),
+          _LanguageChangeButton(language),
         ],
       ),
     );
@@ -236,6 +247,10 @@ class _SearchBarWithBackButton extends StatelessWidget {
 }
 
 class _HistoryHeader extends StatelessWidget {
+  final String language;
+
+  const _HistoryHeader(this.language);
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -255,7 +270,7 @@ class _HistoryHeader extends StatelessWidget {
             Icons.delete,
             () {
               BlocProvider.of<_SearchScreenBloc>(context)
-                  .add(const _HistoryDeleted());
+                  .add(_HistoryDeleted(language));
             },
             size: 32.0,
           ),
@@ -266,15 +281,39 @@ class _HistoryHeader extends StatelessWidget {
 }
 
 class SearchScreen extends StatelessWidget {
-  const SearchScreen() : super(key: const Key('SearchScreen'));
+  final String language;
+
+  SearchScreen(this.language) : super(key: Key('SearchScreen:$language'));
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) {
-        return _SearchScreenBloc();
+        return _SearchScreenBloc(language);
       },
-      child: const _SearchScreenStateful(),
+      child: _SearchScreenStateful(language),
     );
+  }
+}
+
+class _LanguageChangeButton extends StatelessWidget {
+  final String language;
+
+  const _LanguageChangeButton(this.language);
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomButton(Icons.language, () {
+      MyRouterDelegate routerDelegate = Get.find();
+      routerDelegate.pushPage('/language', arguments: {
+        'articleLanguage': 'en',
+        'articleName': mainPageName,
+        'insteadOfNavigation': (language) {
+          MyRouterDelegate routerDelegate = Get.find();
+          routerDelegate.popRoute(); // Current search screen
+          routerDelegate.pushPage('/search', arguments: language);
+        }
+      });
+    });
   }
 }

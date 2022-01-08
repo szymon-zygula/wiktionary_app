@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'router_delegate.dart';
 
 void main() async {
-  runApp(WiktionaryApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences localStorage = await SharedPreferences.getInstance();
+  runApp(WiktionaryApp(Get.put(localStorage)));
 }
 
 class WiktionaryApp extends StatelessWidget {
-  final routerDelegate = Get.put(MyRouterDelegate());
+  final MyRouterDelegate routerDelegate = Get.put(MyRouterDelegate());
+  final SharedPreferences localStorage;
 
-  WiktionaryApp() : super(key: const Key('MyApp')) {
+  WiktionaryApp(this.localStorage) : super(key: const Key('MyApp')) {
     routerDelegate.pushPage('/main');
   }
 

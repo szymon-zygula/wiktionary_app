@@ -2,51 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'router_delegate.dart';
 import 'search_bar.dart';
 import 'generic_entry_list.dart';
 import 'custom_buttons.dart';
 import 'debug.dart';
 import 'wiktionary_api.dart';
-
-final List<String> dummyHistory = <String>[
-  'szołdra',
-  'snycerz',
-  'acquiesce',
-  'herfallen',
-  'głowica',
-  'penna',
-  'esquiver',
-  'srbski',
-  'szołdra',
-  'snycerz',
-  'acquiesce',
-  'herfallen',
-  'szołdra',
-  'snycerz',
-  'acquiesce',
-  'herfallen',
-  'szołdra',
-  'snycerz',
-  'acquiesce',
-  'herfallen',
-  'szołdra',
-  'snycerz',
-  'acquiesce',
-  'herfallen',
-  'szołdra',
-  'snycerz',
-  'acquiesce',
-  'herfallen',
-  'szołdra',
-  'snycerz',
-  'acquiesce',
-  'herfallen',
-  'szołdra',
-  'snycerz',
-  'acquiesce',
-  'herfallen'
-];
 
 abstract class _SearchScreenEvent extends Equatable {
   const _SearchScreenEvent();
@@ -130,6 +92,14 @@ class _SearchedState extends _SearchScreenBlocState {
               )
               .toList(),
           onTap: (entry) {
+            SharedPreferences localStorage = Get.find();
+            List<String> history =
+                localStorage.getStringList('searchHistory') ?? [];
+            Map<String, String> entryMap = entry as Map<String, String>;
+            history
+                .add("${entryMap['language']!}||${entryMap['articleName']!}");
+            localStorage.setStringList('searchHistory', history);
+
             MyRouterDelegate routerDelegate = Get.find();
             routerDelegate.popRoute();
             routerDelegate.pushPage('/article', arguments: entry);
@@ -148,12 +118,26 @@ class _HistoryState extends _SearchScreenBlocState {
 
   @override
   Widget getWidget() {
+    SharedPreferences localStorage = Get.find();
+    List<String> history = localStorage.getStringList('searchHistory') ?? [];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const _SearchBarWithBackButton(),
         _HistoryHeader(),
-        GenericEntryList(dummyHistory, dummyHistory),
+        GenericEntryList(
+          history.reversed.map((entry) => entry.split('||')[1]).toList(),
+          history.reversed.toList(),
+          onTap: (entry) {
+            MyRouterDelegate routerDelegate = Get.find();
+            routerDelegate.popRoute();
+            List<String> split = (entry as String).split('||');
+            routerDelegate.pushPage('/article', arguments: {
+              'language': split[0],
+              'articleName': split[1],
+            });
+          },
+        ),
       ],
     );
   }
@@ -185,7 +169,9 @@ class _SearchScreenBloc
 
   void onHistoryDeleted(
       _HistoryDeleted event, Emitter<_SearchScreenBlocState> emit) {
-    // TODO: clean history
+    SharedPreferences localStorage = Get.find();
+    localStorage.setStringList('searchHistory', []);
+    emit(const _HistoryState());
   }
 }
 
@@ -268,7 +254,6 @@ class _HistoryHeader extends StatelessWidget {
           child: CustomButton(
             Icons.delete,
             () {
-              showSnackBar(context, 'Supprimer l\'histoire');
               BlocProvider.of<_SearchScreenBloc>(context)
                   .add(const _HistoryDeleted());
             },

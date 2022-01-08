@@ -3,7 +3,9 @@ import 'package:equatable/equatable.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:get/get.dart';
 import 'wiktionary_api.dart';
+import 'router_delegate.dart';
 
 abstract class _ArticleViewEvent extends Equatable {
   const _ArticleViewEvent();
@@ -11,8 +13,9 @@ abstract class _ArticleViewEvent extends Equatable {
 
 class _ArticleLoadedEvent extends _ArticleViewEvent {
   final dom.Document article;
+  final String language;
 
-  const _ArticleLoadedEvent(this.article);
+  const _ArticleLoadedEvent(this.article, this.language);
 
   @override
   List<Object> get props => [article];
@@ -42,7 +45,9 @@ class _ArticleViewLoadingState extends _ArticleViewBlocState {
 
 class _ArticleViewLoadedState extends _ArticleViewBlocState {
   final dom.Document article;
-  const _ArticleViewLoadedState(this.article);
+  final String language;
+
+  const _ArticleViewLoadedState(this.article, this.language);
 
   @override
   List<Object> get props => [article];
@@ -54,7 +59,12 @@ class _ArticleViewLoadedState extends _ArticleViewBlocState {
         child: Html(
           data: article.documentElement!.innerHtml,
           onLinkTap: (url, _, __, ___) {
-            print("Tapped on $url...");
+            MyRouterDelegate routerDelegate = Get.find();
+            routerDelegate.popRoute();
+            routerDelegate.pushPage('/article', arguments: {
+              'articleName': url!.split('/')[2],
+              'language': language,
+            });
           },
           customRender: {
             "table": (RenderContext context, Widget child) {
@@ -76,7 +86,7 @@ class _ArticleViewBloc extends Bloc<_ArticleViewEvent, _ArticleViewBlocState> {
   }
 
   void onLoad(_ArticleLoadedEvent event, Emitter<_ArticleViewBlocState> emit) {
-    emit(_ArticleViewLoadedState(event.article));
+    emit(_ArticleViewLoadedState(event.article, event.language));
   }
 }
 
@@ -94,7 +104,8 @@ class _ArticleViewState extends State<_ArticleView> {
   @override
   void initState() {
     getArticle(widget.articleLanguage, widget.articleName).then((doc) {
-      BlocProvider.of<_ArticleViewBloc>(context).add(_ArticleLoadedEvent(doc));
+      BlocProvider.of<_ArticleViewBloc>(context)
+          .add(_ArticleLoadedEvent(doc, widget.articleLanguage));
     });
     super.initState();
   }

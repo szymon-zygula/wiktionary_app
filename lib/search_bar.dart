@@ -44,6 +44,7 @@ class DummySearchBar extends StatelessWidget {
       child: TextField(
         maxLines: 1,
         cursorColor: const Color.fromRGBO(64, 64, 64, 1.0),
+        readOnly: true,
         onTap: () {
           if (onTap != null) {
             onTap!();

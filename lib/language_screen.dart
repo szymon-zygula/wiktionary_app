@@ -107,9 +107,9 @@ class _HeaderBarWithBackButton extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(10),
       child: Row(
-        children: [
+        children: const [
           CustomBackButton(),
-          const _HeaderBar(),
+          _HeaderBar(),
         ],
       ),
     );
@@ -137,7 +137,7 @@ class LanguageScreen extends StatelessWidget {
   final String articleLanguage;
   final String articleName;
 
-  LanguageScreen(this.articleLanguage, this.articleName)
+  LanguageScreen({required this.articleLanguage, required this.articleName})
       : super(key: Key('LanguageScreen:$articleLanguage:$articleName'));
 
   @override

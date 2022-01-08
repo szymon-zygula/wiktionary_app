@@ -5,7 +5,11 @@ import 'debug.dart';
 import 'article_viewer.dart';
 
 class ArticleScreen extends StatelessWidget {
-  const ArticleScreen() : super(key: const Key('ArticleScreen'));
+  final String language;
+  final String articleName;
+
+  const ArticleScreen({required this.language, required this.articleName})
+      : super(key: const Key('ArticleScreen'));
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +17,7 @@ class ArticleScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const _SearchBarWithButtons(),
-        ArticleViewer('en', 'manger'),
+        ArticleViewer(language, articleName),
       ],
     );
   }
@@ -33,7 +37,7 @@ class _SearchBarWithButtons extends StatelessWidget {
           Expanded(
             child: Container(
               padding: const EdgeInsets.only(left: 10, right: 10),
-              child: const SearchBar(),
+              child: const DummySearchBar(),
             ),
           ),
           CustomButton(Icons.language, () {

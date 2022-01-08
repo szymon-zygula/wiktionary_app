@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'main_screen.dart';
-import 'article_screen.dart';
-import 'language_screen.dart';
-import 'search_screen.dart';
+import 'package:get/get.dart';
+import 'router_delegate.dart';
 
 void main() async {
-  runApp(const WiktionaryApp());
+  runApp(WiktionaryApp());
 }
 
 class WiktionaryApp extends StatelessWidget {
-  const WiktionaryApp() : super(key: const Key('MyApp'));
+  final routerDelegate = Get.put(MyRouterDelegate());
+
+  WiktionaryApp() : super(key: const Key('MyApp')) {
+    routerDelegate.pushPage('/main');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,10 @@ class WiktionaryApp extends StatelessWidget {
       ),
       home: Scaffold(
         body: SafeArea(
-          child: LanguageScreen('en', 'spaghetti'),
+          child: Router(
+            routerDelegate: routerDelegate,
+            backButtonDispatcher: RootBackButtonDispatcher(),
+          ),
         ),
       ),
     );

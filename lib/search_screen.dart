@@ -69,7 +69,7 @@ class _SearchBarWithBackButton extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       child: Row(
         children: [
-          CustomBackButton(),
+          const CustomBackButton(),
           Expanded(
               child: Container(
                   padding: const EdgeInsets.only(left: 10, right: 10),

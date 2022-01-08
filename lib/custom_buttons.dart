@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'debug.dart';
+import 'package:get/get.dart';
+import 'router_delegate.dart';
 
 class CustomBackButton extends StatelessWidget {
   const CustomBackButton() : super(key: const Key('CustomBackButton'));
 
   @override
   Widget build(BuildContext context) {
+    MyRouterDelegate routerDelegate = Get.find();
     return CustomButton(Icons.arrow_back, () {
-      showSnackBar(context, "<-- return!");
+      routerDelegate.popRoute();
     });
   }
 }

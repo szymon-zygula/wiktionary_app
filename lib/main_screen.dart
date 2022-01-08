@@ -12,7 +12,7 @@ class MainScreen extends StatelessWidget {
         const _WiktionaryHeader(),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: const SearchBar(),
+          child: const DummySearchBar(),
         )
       ],
     );

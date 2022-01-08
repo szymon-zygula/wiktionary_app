@@ -49,9 +49,12 @@ class _LanguageListLoadedState extends _LanguageListBlocState {
 
   @override
   Widget getWidget() {
-    return GenericEntryList(languages
-        .map((language) => "${language.autonym} (${language.name})")
-        .toList());
+    return GenericEntryList(
+      languages
+          .map((language) => "${language.autonym} (${language.name})")
+          .toList(),
+      languages,
+    );
   }
 }
 

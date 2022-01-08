@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
+import 'router_delegate.dart';
 import 'search_bar.dart';
 import 'generic_entry_list.dart';
 import 'custom_buttons.dart';
@@ -117,7 +119,22 @@ class _SearchedState extends _SearchScreenBlocState {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const _SearchBarWithBackButton(),
-        GenericEntryList(results),
+        GenericEntryList(
+          results,
+          results
+              .map(
+                (result) => {
+                  "language": "en",
+                  "articleName": result,
+                },
+              )
+              .toList(),
+          onTap: (entry) {
+            MyRouterDelegate routerDelegate = Get.find();
+            routerDelegate.popRoute();
+            routerDelegate.pushPage('/article', arguments: entry);
+          },
+        )
       ],
     );
   }
@@ -136,7 +153,7 @@ class _HistoryState extends _SearchScreenBlocState {
       children: [
         const _SearchBarWithBackButton(),
         _HistoryHeader(),
-        GenericEntryList(dummyHistory),
+        GenericEntryList(dummyHistory, dummyHistory),
       ],
     );
   }
@@ -210,7 +227,7 @@ class _SearchBarWithBackButton extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.only(left: 10, right: 10),
               child: SearchBar(
-                onChanged: (String query) {
+                onSubmitted: (String query) {
                   BlocProvider.of<_SearchScreenBloc>(context)
                       .add(_SearchPerformed(query));
 

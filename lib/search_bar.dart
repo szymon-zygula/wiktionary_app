@@ -30,7 +30,8 @@ class SearchBar extends StatelessWidget {
 }
 
 class DummySearchBar extends StatelessWidget {
-  const DummySearchBar() : super(key: const Key('SearchBar'));
+  final Function()? onTap;
+  const DummySearchBar({this.onTap}) : super(key: const Key('SearchBar'));
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +45,10 @@ class DummySearchBar extends StatelessWidget {
         maxLines: 1,
         cursorColor: const Color.fromRGBO(64, 64, 64, 1.0),
         onTap: () {
+          if (onTap != null) {
+            onTap!();
+          }
+
           MyRouterDelegate routerDelegate = Get.find();
           routerDelegate.pushPage('/search');
         },

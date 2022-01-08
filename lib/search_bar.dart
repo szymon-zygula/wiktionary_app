@@ -3,7 +3,9 @@ import 'package:get/get.dart';
 import 'router_delegate.dart';
 
 class SearchBar extends StatelessWidget {
-  const SearchBar() : super(key: const Key('SearchBar'));
+  final Function(String)? onChanged;
+
+  const SearchBar({this.onChanged}) : super(key: const Key('SearchBar'));
 
   @override
   Widget build(BuildContext context) {
@@ -13,11 +15,12 @@ class SearchBar extends StatelessWidget {
         color: const Color.fromRGBO(224, 224, 224, 1.0),
         borderRadius: BorderRadius.circular(1000.0),
       ),
-      child: const TextField(
+      child: TextField(
         autofocus: true,
         maxLines: 1,
-        cursorColor: Color.fromRGBO(64, 64, 64, 1.0),
-        decoration: InputDecoration(
+        onChanged: onChanged,
+        cursorColor: const Color.fromRGBO(64, 64, 64, 1.0),
+        decoration: const InputDecoration(
           hintText: 'Search',
           border: InputBorder.none,
         ),

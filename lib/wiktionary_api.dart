@@ -10,6 +10,7 @@ const wiktionaryDomain = "wiktionary.org";
 const apiPath = "/w/api.php";
 const apiOmnipresentParams = "format=json";
 const apiGetLanguagesParams = "action=parse&prop=langlinks";
+const apiSearchParams = "action=opensearch";
 
 String _getApiUrl(String langCode) {
   return "$protocol://$langCode.$wiktionaryDomain/$apiPath?$apiOmnipresentParams";
@@ -36,11 +37,16 @@ class LanguageDefinition {
   }
 }
 
+Future<dynamic> _getJson(String url) async {
+  http.Response res = await http.get(Uri.parse(url));
+  dynamic jsonRes = jsonDecode(res.body.toString());
+  return jsonRes;
+}
+
 Future<List<LanguageDefinition>> getArticleLanguages(
     String lang, String page) async {
   String url = "${_getApiUrl(lang)}&$apiGetLanguagesParams&page=$page";
-  http.Response res = await http.get(Uri.parse(url));
-  Map<String, dynamic> jsonRes = jsonDecode(res.body.toString());
+  Map<String, dynamic> jsonRes = await _getJson(url);
   List<dynamic> unparsedLangs = jsonRes["parse"]["langlinks"];
 
   List<LanguageDefinition> langs = [];
@@ -60,5 +66,14 @@ Future<dom.Document> getArticle(String lang, String name) async {
   return document;
 }
 
-//TODO: https://en.wiktionary.org/w/api.php?action=opensearch&search=uberweisen
-// Future<> search...
+Future<List<String>> getSearchResults(String lang, String query) async {
+  String url = "${_getApiUrl(lang)}&$apiSearchParams&search=$query";
+  try {
+    List<dynamic> jsonRes = await _getJson(url);
+    List<String> results =
+        (jsonRes[1] as List<dynamic>).map((lang) => (lang as String)).toList();
+    return results;
+  } catch (_) {
+    return [];
+  }
+}

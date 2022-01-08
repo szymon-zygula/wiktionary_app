@@ -23,8 +23,8 @@ abstract class _ArticleViewBlocState extends Equatable {
   Widget getWidget();
 }
 
-class ArticleViewLoadingState extends _ArticleViewBlocState {
-  const ArticleViewLoadingState();
+class _ArticleViewLoadingState extends _ArticleViewBlocState {
+  const _ArticleViewLoadingState();
 
   @override
   List<Object> get props => [];
@@ -71,7 +71,7 @@ class _ArticleViewLoadedState extends _ArticleViewBlocState {
 }
 
 class _ArticleViewBloc extends Bloc<_ArticleViewEvent, _ArticleViewBlocState> {
-  _ArticleViewBloc() : super(const ArticleViewLoadingState()) {
+  _ArticleViewBloc() : super(const _ArticleViewLoadingState()) {
     on<_ArticleLoadedEvent>(onLoad);
   }
 

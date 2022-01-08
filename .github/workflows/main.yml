@@ -24,11 +24,11 @@ jobs:
       - name: Check flutter version
         run: flutter --version
 
-      - name: Run tests
-        run: flutter test
-
       - name: Setup project
         run: flutter pub get
+
+      - name: Run tests
+        run: flutter test
 
       - name: Build Android app
         run: flutter build apk

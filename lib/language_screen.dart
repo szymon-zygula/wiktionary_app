@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:get/get.dart';
+import 'router_delegate.dart';
 import 'wiktionary_api.dart';
 import 'generic_entry_list.dart';
 import 'custom_buttons.dart';
@@ -11,8 +13,9 @@ abstract class _LanguageListEvent extends Equatable {
 
 class _LanguageListLoadedEvent extends _LanguageListEvent {
   final List<LanguageDefinition> languages;
+  final String articleName;
 
-  const _LanguageListLoadedEvent(this.languages);
+  const _LanguageListLoadedEvent(this.articleName, this.languages);
 
   @override
   List<Object> get props => [languages];
@@ -41,8 +44,9 @@ class LanguageListLoadingState extends _LanguageListBlocState {
 }
 
 class _LanguageListLoadedState extends _LanguageListBlocState {
+  final String articleName;
   final List<LanguageDefinition> languages;
-  const _LanguageListLoadedState(this.languages);
+  const _LanguageListLoadedState(this.articleName, this.languages);
 
   @override
   List<Object> get props => [languages];
@@ -53,7 +57,20 @@ class _LanguageListLoadedState extends _LanguageListBlocState {
       languages
           .map((language) => "${language.autonym} (${language.name})")
           .toList(),
-      languages,
+      languages.map((language) => language.code).toList(),
+      onTap: (lang) {
+        MyRouterDelegate routerDelegate = Get.find();
+        routerDelegate.popRoute(); // Pop language screen
+        routerDelegate.popRoute(); // Pop article screen in previous laguage
+        Map<String, String> args = {
+          'language': lang as String,
+          'articleName': articleName,
+        };
+        routerDelegate.pushPage(
+          '/article',
+          arguments: args,
+        );
+      },
     );
   }
 }
@@ -66,7 +83,7 @@ class _LanguageListBloc
 
   void onLoad(
       _LanguageListLoadedEvent event, Emitter<_LanguageListBlocState> emit) {
-    emit(_LanguageListLoadedState(event.languages));
+    emit(_LanguageListLoadedState(event.articleName, event.languages));
   }
 }
 
@@ -86,7 +103,7 @@ class _LanguageListState extends State<_LanguageList> {
     getArticleLanguages(widget.articleLanguage, widget.articleName)
         .then((languages) {
       BlocProvider.of<_LanguageListBloc>(context)
-          .add(_LanguageListLoadedEvent(languages));
+          .add(_LanguageListLoadedEvent(widget.articleName, languages));
     });
     super.initState();
   }

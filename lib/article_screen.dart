@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'search_bar.dart';
 import 'custom_buttons.dart';
 import 'debug.dart';
 import 'article_viewer.dart';
+import 'router_delegate.dart';
 
 class ArticleScreen extends StatelessWidget {
   final String language;
@@ -16,7 +18,7 @@ class ArticleScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const _SearchBarWithButtons(),
+        _SearchBarWithButtons(articleName, language),
         ArticleViewer(language, articleName),
       ],
     );
@@ -24,7 +26,10 @@ class ArticleScreen extends StatelessWidget {
 }
 
 class _SearchBarWithButtons extends StatelessWidget {
-  const _SearchBarWithButtons()
+  final String articleName;
+  final String articleLanguage;
+
+  const _SearchBarWithButtons(this.articleName, this.articleLanguage)
       : super(key: const Key('_SearchBarWithButtons'));
 
   @override
@@ -41,7 +46,11 @@ class _SearchBarWithButtons extends StatelessWidget {
             ),
           ),
           CustomButton(Icons.language, () {
-            showSnackBar(context, 'Changement de la langue !');
+            MyRouterDelegate routerDelegate = Get.find();
+            routerDelegate.pushPage('/language', arguments: {
+              'articleLanguage': articleLanguage,
+              'articleName': articleName,
+            });
           }),
         ],
       ),

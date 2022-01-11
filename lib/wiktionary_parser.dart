@@ -3,7 +3,15 @@ import 'package:html/dom.dart' as dom;
 import 'wiktionary_api.dart' as wiktionary_api;
 
 String _getTitle(dom.Document document) {
-  return document.getElementById('firstHeading')!.innerHtml;
+  dom.Element firstHeading = document.getElementById('firstHeading')!;
+  List<dom.Element> firstHeadingSpans =
+      firstHeading.getElementsByTagName('span');
+
+  if (firstHeadingSpans.isEmpty) {
+    return firstHeading.innerHtml;
+  } else {
+    return firstHeadingSpans[0].innerHtml;
+  }
 }
 
 void _removeNestedTables(dom.Document document) {
@@ -61,6 +69,12 @@ void _convertTag(dom.Document document, dom.Element element, String newTag) {
 void _removeExternalLinks(dom.Document document) {
   document
       .getElementsByClassName('extiw')
+      .forEach((el) => _convertTag(document, el, 'span'));
+}
+
+void _removeNewArticleLinks(dom.Document document) {
+  document
+      .getElementsByClassName('new')
       .forEach((el) => _convertTag(document, el, 'span'));
 }
 
@@ -183,6 +197,7 @@ String cleanDocument(dom.Document document) {
   _extractNoscripts(document);
 
   _removeExternalLinks(document);
+  _removeNewArticleLinks(document);
   _removeAudiometa(document);
 
   _removeLazyLoadedImages(document);

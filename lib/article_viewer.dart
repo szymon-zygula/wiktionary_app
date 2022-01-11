@@ -13,9 +13,10 @@ abstract class _ArticleViewEvent extends Equatable {
 
 class _ArticleLoadedEvent extends _ArticleViewEvent {
   final dom.Document article;
+  final String articleName;
   final String language;
 
-  const _ArticleLoadedEvent(this.article, this.language);
+  const _ArticleLoadedEvent(this.article, this.articleName, this.language);
 
   @override
   List<Object> get props => [article];
@@ -45,9 +46,10 @@ class _ArticleViewLoadingState extends _ArticleViewBlocState {
 
 class _ArticleViewLoadedState extends _ArticleViewBlocState {
   final dom.Document article;
+  final String articleName;
   final String language;
 
-  const _ArticleViewLoadedState(this.article, this.language);
+  const _ArticleViewLoadedState(this.article, this.articleName, this.language);
 
   @override
   List<Object> get props => [article];
@@ -56,24 +58,40 @@ class _ArticleViewLoadedState extends _ArticleViewBlocState {
   Widget getWidget() {
     return Expanded(
       child: SingleChildScrollView(
-        child: Html(
-          data: article.documentElement!.innerHtml,
-          onLinkTap: (url, _, __, ___) {
-            MyRouterDelegate routerDelegate = Get.find();
-            routerDelegate.popRoute();
-            routerDelegate.pushPage('/article', arguments: {
-              'articleName': url!.split('/')[2],
-              'language': language,
-            });
-          },
-          customRender: {
-            'table': (RenderContext context, Widget child) {
-              return SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: (context.tree as TableLayoutElement).toWidget(context),
-              );
-            },
-          },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Text(
+                articleName,
+                style: const TextStyle(
+                  fontSize: 32.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Html(
+              data: article.documentElement!.innerHtml,
+              onLinkTap: (url, _, __, ___) {
+                MyRouterDelegate routerDelegate = Get.find();
+                routerDelegate.popRoute();
+                routerDelegate.pushPage('/article', arguments: {
+                  'articleName': url!.split('/')[2],
+                  'language': language,
+                });
+              },
+              customRender: {
+                'table': (RenderContext context, Widget child) {
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child:
+                        (context.tree as TableLayoutElement).toWidget(context),
+                  );
+                },
+              },
+            ),
+          ],
         ),
       ),
     );
@@ -86,7 +104,8 @@ class _ArticleViewBloc extends Bloc<_ArticleViewEvent, _ArticleViewBlocState> {
   }
 
   void onLoad(_ArticleLoadedEvent event, Emitter<_ArticleViewBlocState> emit) {
-    emit(_ArticleViewLoadedState(event.article, event.language));
+    emit(_ArticleViewLoadedState(
+        event.article, event.articleName, event.language));
   }
 }
 
@@ -104,8 +123,8 @@ class _ArticleViewState extends State<_ArticleView> {
   @override
   void initState() {
     getArticle(widget.articleLanguage, widget.articleName).then((doc) {
-      BlocProvider.of<_ArticleViewBloc>(context)
-          .add(_ArticleLoadedEvent(doc, widget.articleLanguage));
+      BlocProvider.of<_ArticleViewBloc>(context).add(
+          _ArticleLoadedEvent(doc, widget.articleName, widget.articleLanguage));
     });
     super.initState();
   }

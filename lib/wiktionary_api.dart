@@ -1,7 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' as htmlparser;
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:convert';
 import 'wiktionary_parser.dart' as wiktionary_parser;
 
@@ -61,13 +60,20 @@ Future<List<LanguageDefinition>> getArticleLanguages(
   return langs;
 }
 
-Future<dom.Document> getArticle(String lang, String name) async {
+class WiktionaryArticle {
+  final dom.Document content;
+  final String title;
+
+  WiktionaryArticle(this.content, this.title);
+}
+
+Future<WiktionaryArticle> getArticle(String lang, String name) async {
   String url = '${_getSiteUrl(lang)}$name';
   http.Response res = await http.get(Uri.parse(url));
   String body = res.body.toString();
   dom.Document document = htmlparser.parse(body);
-  wiktionary_parser.cleanDocument(document);
-  return document;
+  String title = wiktionary_parser.cleanDocument(document);
+  return WiktionaryArticle(document, title);
 }
 
 Future<List<String>> getSearchResults(String lang, String query) async {

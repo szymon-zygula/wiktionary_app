@@ -122,9 +122,15 @@ class _ArticleView extends StatefulWidget {
 class _ArticleViewState extends State<_ArticleView> {
   @override
   void initState() {
-    getArticle(widget.articleLanguage, widget.articleName).then((doc) {
+    getArticle(widget.articleLanguage, widget.articleName)
+        .then((wiktionaryArtile) {
       BlocProvider.of<_ArticleViewBloc>(context).add(
-          _ArticleLoadedEvent(doc, widget.articleName, widget.articleLanguage));
+        _ArticleLoadedEvent(
+          wiktionaryArtile.content,
+          wiktionaryArtile.title,
+          widget.articleLanguage,
+        ),
+      );
     });
     super.initState();
   }

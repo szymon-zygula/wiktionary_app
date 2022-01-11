@@ -1,13 +1,16 @@
-import 'wiktionary_api.dart' as wiktionary_api;
-
-import 'package:html/parser.dart' as htmlparser;
 import 'package:html/dom.dart' as dom;
 
-void removeSelf(dom.Element element) {
+import 'wiktionary_api.dart' as wiktionary_api;
+
+String _getTitle(dom.Document document) {
+  return document.getElementById('firstHeading')!.innerHtml;
+}
+
+void _removeSelf(dom.Element element) {
   element.remove();
 }
 
-void removeParent(dom.Element element) {
+void _removeParent(dom.Element element) {
   element.parent!.remove();
 }
 
@@ -24,22 +27,22 @@ void _extractContent(dom.Document document) {
 }
 
 void _removeAudio(dom.Document document) {
-  document.getElementsByClassName('audiotable').forEach(removeParent);
+  document.getElementsByClassName('audiotable').forEach(_removeParent);
 }
 
 void _removeEditSections(dom.Document document) {
-  document.getElementsByClassName('mw-editsection').forEach(removeSelf);
+  document.getElementsByClassName('mw-editsection').forEach(_removeSelf);
 }
 
 void _removePageActionsMenu(dom.Document document) {
-  document.getElementsByClassName('page-actions-menu').forEach(removeSelf);
+  document.getElementsByClassName('page-actions-menu').forEach(_removeSelf);
 }
 
 void _removeScripts(dom.Document document) {
-  document.getElementsByTagName('script').forEach(removeSelf);
+  document.getElementsByTagName('script').forEach(_removeSelf);
 }
 
-void convertTag(dom.Document document, dom.Element element, String newTag) {
+void _convertTag(dom.Document document, dom.Element element, String newTag) {
   String innerHtml = element.innerHtml;
   dom.Element newElement = document.createElement(newTag);
   newElement.innerHtml = innerHtml;
@@ -49,33 +52,35 @@ void convertTag(dom.Document document, dom.Element element, String newTag) {
 void _removeExternalLinks(dom.Document document) {
   document
       .getElementsByClassName('extiw')
-      .forEach((el) => convertTag(document, el, 'span'));
+      .forEach((el) => _convertTag(document, el, 'span'));
 }
 
 void _removeAudiometa(dom.Document document) {
-  document.getElementsByClassName('audiometa').forEach(removeSelf);
+  document.getElementsByClassName('audiometa').forEach(_removeSelf);
 }
 
-void extractOnlyChild(dom.Element element) {
+void _extractOnlyChild(dom.Element element) {
   element.replaceWith(element.firstChild!);
 }
 
 void _removeLazyLoadedImages(dom.Document document) {
-  document.getElementsByClassName('lazy-image-placeholder').forEach(removeSelf);
+  document
+      .getElementsByClassName('lazy-image-placeholder')
+      .forEach(_removeSelf);
 }
 
 void _removeLinksFromImages(dom.Document document) {
-  document.getElementsByClassName('image').forEach(extractOnlyChild);
+  document.getElementsByClassName('image').forEach(_extractOnlyChild);
 }
 
-void makeResourceLinkAbsolute(dom.Element element) {
+void _makeResourceLinkAbsolute(dom.Element element) {
   element.attributes['src'] =
       wiktionary_api.protocol + ':' + element.attributes['src']!;
 }
 
 void _makeResourceLinksAbsolute(dom.Document document) {
-  document.getElementsByTagName('img').forEach(makeResourceLinkAbsolute);
-  document.getElementsByTagName('source').forEach(makeResourceLinkAbsolute);
+  document.getElementsByTagName('img').forEach(_makeResourceLinkAbsolute);
+  document.getElementsByTagName('source').forEach(_makeResourceLinkAbsolute);
 }
 
 void extractNoscript(dom.Document document, dom.Element element) {
@@ -95,11 +100,11 @@ void _extractNoscripts(dom.Document document) {
 }
 
 void _removeWordOfTheDayInfo(dom.Document document) {
-  document.getElementsByClassName('was-wotd').forEach(removeSelf);
+  document.getElementsByClassName('was-wotd').forEach(_removeSelf);
 }
 
 void _removeNavigation(dom.Document document) {
-  document.getElementsByClassName('toc').forEach(removeSelf);
+  document.getElementsByClassName('toc').forEach(_removeSelf);
 }
 
 void _fixInlineBackgroundColor(dom.Document document) {
@@ -108,7 +113,7 @@ void _fixInlineBackgroundColor(dom.Document document) {
   document.documentElement!.innerHtml = fixedInner;
 }
 
-void appendStyle(dom.Element element, String style) {
+void _appendStyle(dom.Element element, String style) {
   String newStyle;
   if (element.attributes['style'] == null) {
     newStyle = '';
@@ -122,25 +127,25 @@ void appendStyle(dom.Element element, String style) {
 void _centerTableHeaders(dom.Document document) {
   document
       .getElementsByTagName('th')
-      .forEach((el) => appendStyle(el, 'text-align:center'));
+      .forEach((el) => _appendStyle(el, 'text-align:center'));
 }
 
 void _styleTables(dom.Document document) {
   document
       .getElementsByTagName('table')
-      .forEach((el) => appendStyle(el, 'border: 1px solid black'));
+      .forEach((el) => _appendStyle(el, 'border: 1px solid black'));
   document
       .getElementsByTagName('th')
-      .forEach((el) => appendStyle(el, 'border: 1px solid black'));
+      .forEach((el) => _appendStyle(el, 'border: 1px solid black'));
   document
       .getElementsByTagName('td')
-      .forEach((el) => appendStyle(el, 'border: 1px solid black'));
+      .forEach((el) => _appendStyle(el, 'border: 1px solid black'));
   document
       .getElementsByTagName('tr')
-      .forEach((el) => appendStyle(el, 'border: 1px solid black'));
+      .forEach((el) => _appendStyle(el, 'border: 1px solid black'));
 }
 
-String removeUnitsFromString(String str, String unit) {
+String _removeUnitsFromString(String str, String unit) {
   str = str.replaceAll(RegExp(r'width: ?\d+' + unit + ';?'), '');
   str = str.replaceAll(RegExp(r'height: ?\d+' + unit + ';?'), '');
   return str;
@@ -148,14 +153,16 @@ String removeUnitsFromString(String str, String unit) {
 
 void _removeUnsupportedUnits(dom.Document document) {
   String inner = document.documentElement!.innerHtml;
-  inner = removeUnitsFromString(inner, 'em');
-  inner = removeUnitsFromString(inner, 'rem');
-  inner = removeUnitsFromString(inner, 'vh');
-  inner = removeUnitsFromString(inner, 'vw');
+  inner = _removeUnitsFromString(inner, 'em');
+  inner = _removeUnitsFromString(inner, 'rem');
+  inner = _removeUnitsFromString(inner, 'vh');
+  inner = _removeUnitsFromString(inner, 'vw');
   document.documentElement!.innerHtml = inner;
 }
 
-void cleanDocument(dom.Document document) {
+String cleanDocument(dom.Document document) {
+  String title = _getTitle(document);
+
   _extractContent(document);
 
   _removeAudio(document);
@@ -182,4 +189,6 @@ void cleanDocument(dom.Document document) {
   _styleTables(document);
 
   _removeUnsupportedUnits(document);
+
+  return title;
 }

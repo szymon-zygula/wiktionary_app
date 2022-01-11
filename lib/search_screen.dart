@@ -210,8 +210,8 @@ class _SearchScreenState extends State<_SearchScreenStateful> {
 
 class _SearchBarWithBackButton extends StatelessWidget {
   final String language;
-  const _SearchBarWithBackButton(this.language)
-      : super(key: const Key('_SearchBarWithBackButton'));
+  _SearchBarWithBackButton(this.language)
+      : super(key: Key('_SearchBarWithBackButton:$language'));
 
   @override
   Widget build(BuildContext context) {
@@ -224,6 +224,7 @@ class _SearchBarWithBackButton extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.only(left: 10, right: 10),
               child: SearchBar(
+                language: language,
                 onSubmitted: (String query) {
                   BlocProvider.of<_SearchScreenBloc>(context)
                       .add(_SearchPerformed(query, language));

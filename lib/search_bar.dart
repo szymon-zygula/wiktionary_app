@@ -5,8 +5,12 @@ import 'router_delegate.dart';
 
 class SearchBar extends StatelessWidget {
   final Function(String)? onSubmitted;
+  final String? language;
 
-  const SearchBar({this.onSubmitted}) : super(key: const Key('SearchBar'));
+  const SearchBar({
+    this.onSubmitted,
+    this.language,
+  }) : super(key: const Key('SearchBar'));
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +26,8 @@ class SearchBar extends StatelessWidget {
         onSubmitted: onSubmitted,
         cursorColor: const Color.fromRGBO(64, 64, 64, 1.0),
         decoration: InputDecoration(
-          hintText: AppLocalizations.of(context)!.search,
+          hintText: AppLocalizations.of(context)!.search +
+              (language != null ? ' [$language]' : ''),
           border: InputBorder.none,
         ),
       ),

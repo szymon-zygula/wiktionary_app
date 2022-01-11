@@ -6,6 +6,15 @@ String _getTitle(dom.Document document) {
   return document.getElementById('firstHeading')!.innerHtml;
 }
 
+void _removeNestedTables(dom.Document document) {
+  List<dom.Element> tables =
+      document.getElementsByClassName('inflection-table');
+
+  for (dom.Element table in tables) {
+    table.getElementsByClassName('inflection-table').forEach(_removeSelf);
+  }
+}
+
 void _removeSelf(dom.Element element) {
   element.remove();
 }
@@ -189,6 +198,8 @@ String cleanDocument(dom.Document document) {
   _styleTables(document);
 
   _removeUnsupportedUnits(document);
+
+  _removeNestedTables(document);
 
   return title;
 }

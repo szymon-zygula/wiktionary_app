@@ -134,7 +134,10 @@ class _HistoryState extends _SearchScreenBlocState {
         _SearchBarWithBackButton(language),
         _HistoryHeader(language),
         GenericEntryList(
-          history.reversed.map((entry) => entry.split('||')[1]).toList(),
+          history.reversed.map((entry) {
+            List<String> split = entry.split('||');
+            return '${split[1]} [${split[0]}]';
+          }).toList(),
           history.reversed.toList(),
           onTap: (entry) {
             MyRouterDelegate routerDelegate = Get.find();

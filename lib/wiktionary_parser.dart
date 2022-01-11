@@ -15,8 +15,7 @@ String _getTitle(dom.Document document) {
 }
 
 void _removeNestedTables(dom.Document document) {
-  List<dom.Element> tables =
-      document.getElementsByClassName('inflection-table');
+  List<dom.Element> tables = document.getElementsByTagName('table');
 
   for (dom.Element table in tables) {
     table.getElementsByClassName('inflection-table').forEach(_removeSelf);

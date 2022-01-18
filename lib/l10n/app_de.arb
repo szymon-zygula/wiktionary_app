@@ -2,5 +2,8 @@
     "search": "Nachschlagen",
     "recentSearches": "Neuste Nachschläge",
     "availableLanguages": "Verfügbare Sprachen",
-    "mainPage": "Wiktionary:Hauptseite"
+    "mainPage": "Wiktionary:Hauptseite",
+    "changeLanguageButton": "Sprache wechseln",
+    "removeHistoryButton": "Geschichte löschen",
+    "goBackButton": "Zurück gehen"
 }

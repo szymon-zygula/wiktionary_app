@@ -276,6 +276,7 @@ class _HistoryHeader extends StatelessWidget {
           padding: const EdgeInsets.only(right: 20, bottom: 10),
           child: CustomButton(
             Icons.delete,
+            AppLocalizations.of(context)!.removeHistoryButton,
             () {
               BlocProvider.of<_SearchScreenBloc>(context)
                   .add(_HistoryDeleted(language));
@@ -311,7 +312,8 @@ class _LanguageChangeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomButton(Icons.language, () {
+    return CustomButton(
+        Icons.language, AppLocalizations.of(context)!.changeLanguageButton, () {
       MyRouterDelegate routerDelegate = Get.find();
       routerDelegate.pushPage('/language', arguments: {
         'articleLanguage': Localizations.localeOf(context).languageCode,

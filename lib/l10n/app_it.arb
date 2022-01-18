@@ -2,5 +2,8 @@
     "search": "Cerca",
     "recentSearches": "Recerche recenti",
     "availableLanguages": "Lingue disponibili",
-    "mainPage": "Pagina_principale"
+    "mainPage": "Pagina_principale",
+    "changeLanguageButton": "Cambia la lingue",
+    "removeHistoryButton": "Cancella la storia",
+    "goBackButton": "Dietro"
 }

@@ -2,5 +2,8 @@
     "search": "Search",
     "recentSearches": "Recent searches",
     "availableLanguages": "Available languages",
-    "mainPage": "Wiktionary:Main_Page"
+    "mainPage": "Wiktionary:Main_Page",
+    "changeLanguageButton": "Change language",
+    "removeHistoryButton": "Remove history",
+    "goBackButton": "Go back"
 }

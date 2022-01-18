@@ -2,5 +2,8 @@
     "search": "Szukaj",
     "recentSearches": "Ostatnie wyszukiwania",
     "availableLanguages": "Dostępne języki",
-    "mainPage": "Wikisłownik:Strona_główna"
+    "mainPage": "Wikisłownik:Strona_główna",
+    "changeLanguageButton": "Zmień język",
+    "removeHistoryButton": "Usuń historię",
+    "goBackButton": "Cofnij"
 }

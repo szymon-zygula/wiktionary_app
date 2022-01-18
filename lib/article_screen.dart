@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'search_bar.dart';
 import 'custom_buttons.dart';
 import 'article_viewer.dart';
@@ -49,7 +51,8 @@ class _SearchBarWithButtons extends StatelessWidget {
               ),
             ),
           ),
-          CustomButton(Icons.language, () {
+          CustomButton(Icons.language,
+              AppLocalizations.of(context)!.changeLanguageButton, () {
             MyRouterDelegate routerDelegate = Get.find();
             routerDelegate.pushPage('/language', arguments: {
               // articleLanguage instead of Localizations because

@@ -6,7 +6,11 @@ class GenericEntryList extends StatelessWidget {
   final Function(Object)? onTap;
 
   GenericEntryList(this.entries, this.entryValues, {this.onTap})
-      : super(key: Key('GenericEntryList:${entries.toString()}'));
+      : super(
+          key: Key(
+            'GenericEntryList:${entries.toString()}:${entryValues.toString()}',
+          ),
+        );
 
   @override
   Widget build(BuildContext context) {

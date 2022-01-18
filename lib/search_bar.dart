@@ -7,10 +7,10 @@ class SearchBar extends StatelessWidget {
   final Function(String)? onSubmitted;
   final String? language;
 
-  const SearchBar({
+  SearchBar({
     this.onSubmitted,
     this.language,
-  }) : super(key: const Key('SearchBar'));
+  }) : super(key: Key('SearchBar:${language ?? 'null'}'));
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class SearchBar extends StatelessWidget {
 
 class DummySearchBar extends StatelessWidget {
   final Function()? onTap;
-  const DummySearchBar({this.onTap}) : super(key: const Key('SearchBar'));
+  const DummySearchBar({this.onTap}) : super(key: const Key('DummySearchBar'));
 
   @override
   Widget build(BuildContext context) {

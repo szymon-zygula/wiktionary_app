@@ -23,8 +23,8 @@ class CustomButton extends StatelessWidget {
   final double size;
   final String label;
 
-  const CustomButton(this.icon, this.label, this.onTap, {this.size = 48.0})
-      : super(key: const Key('CustomButton'));
+  CustomButton(this.icon, this.label, this.onTap, {this.size = 48.0})
+      : super(key: Key('CustomButton:$label:$size'));
 
   @override
   Widget build(BuildContext context) {
